@@ -1,3 +1,5 @@
+FUNZT DAS??
+
 %% 1. Die Grundlagen
 
 % Nehmen wir an, wir müssten folgendes Anfangswertprobelm plotten:
