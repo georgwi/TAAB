@@ -2,10 +2,12 @@
 ---
 Document Version: 0.1
 Group Name: The Anteaters Are Back [TAAB]
-Group participants names: Wolf Vollprecht, Georg Wiedebachw
+Group participants names: Wolf Vollprecht, Georg Wiedebach
 ---
 ## General Introduction
+
 We think ants are fascinating animals because – despite their small brains – they form very huge and complex structures. Very large colonies work very efficiently together as one body. This requires a high level of social coordination. We have (prior to this project) seen some videos which highlight the great buildings ants can form and think their movement is equally interesting. They cover extreme distances in comparison to their size. We as human beings would definitely get lost, so we would to find out how ants are achieving this difficult task.
+
 Ants have been subject of modern research since 1848. The motivations were often interest in instinct, learning and society. Studies in ant movement became even more compelling when scientists started to look for algorithms that solve fundamental tasks like finding the shortest way in a graph. The class of ant colony optimization algorithms was introduced 1992 and has since been a field of active study.
 ---
 ## Fundamental Questions
