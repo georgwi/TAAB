@@ -33,7 +33,9 @@ Of course we hope to find that there are already some good mathematical models a
 ## References 
 
 Wikipedia: Graph Theorie
+
 Wikipedia: Ant colony optimization algorithms
+
 Texts taken from projects homepage (We will update this section during research).
 ## Research Methods
 
