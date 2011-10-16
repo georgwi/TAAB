@@ -35,12 +35,10 @@ Of course we hope that there are already some good mathematical models available
 - Texts taken from projects homepage
 - [Sahabot II](http://www.zeit.de/1999/30/199930.ameisenroboter_.xml)
 - [Labhart and Lambrinos, 2011](http://www.research-projects.uzh.ch/p1027.htm)
+- [Wikipedia: Graph Theorie](http://en.wikipedia.org/wiki/Graph_theory)
+- [Wikipedia: Ant colony optimization algorithms](http://en.wikipedia.org/wiki/Ant_colony_optimization_algorithms)
 - ... (We will update this section during research.
-Wikipedia: Graph Theorie
 
-Wikipedia: Ant colony optimization algorithms
-
-Texts taken from projects homepage (We will update this section during research).
 ## Research Methods
 
 Agent-Based-Model (probably).
