@@ -33,7 +33,11 @@ Probably there are more ways to orientate than by landmarks. Ants may have simil
 We expect that there are already some quite advanced mathematical models available because it is a topic of research for quite some time.
 ## References 
 
-Texts taken from projects homepage (We will update this section during research).
+- Texts taken from projects homepage
+- [Sahabot II](http://www.zeit.de/1999/30/199930.ameisenroboter_.xml)
+- [Labhart and Lambrinos, 2011](http://www.research-projects.uzh.ch/p1027.htm)
+- ... (We will update this section during research.
+
 ## Research Methods
 
 Agent-Based-Model (probably).
