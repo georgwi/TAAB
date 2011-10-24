@@ -1,7 +1,7 @@
 # Research Plan HS11 - Desert Ant Behaviour
 Document Version: 0.1
 ***
-Group Name: The Anteaters
+Group Name: The Anteaters Are Back
 ***
 Group participants names: Wolf Vollprecht, Georg Wiedebach
 ## General Introduction
