@@ -1,0 +1,60 @@
+[1mdiff --cc code.m[m
+[1mindex 50ff690,18e70de..0000000[m
+[1m--- a/code.m[m
+[1m+++ b/code.m[m
+[36m@@@ -1,60 -1,4 +1,67 @@@[m
+[32m++<<<<<<< HEAD[m
+[32m +%% 1. Die Grundlagen[m
+[32m +[m
+[32m +% Nehmen wir an, wir muessten folgendes Anfangswertprobelm plotten:[m
+[32m +% d^2x/dt^2 == sin(x^2) * exp(-dx/dt)[m
+[32m +[m
+[32m +% Die symbolische Loesung der DLG scheint relativ schwirig zu sein, darum[m
+[32m +% hier ein nummerischer Ansatz zur Visualisierung: Zunächst schreiben wir[m
+[32m +% diese DGL zweiter Ordnung als System von DLGs erster Ordnung. Wir[m
+[32m +% erhalten:[m
+[32m +[m
+[32m +% y1 = x[m
+[32m +% y2 = dy1/dt = dx/dt[m
+[32m +[m
+[32m +% Daraus folgt sofort:[m
+[32m +% dy1/dt = y2[m
+[32m +% dy2/dt = sin(y1^2) * exp(-y2)[m
+[32m +[m
+[32m +% Nun muessen wir nur noch festlegen, wie weit wir die Funktion betrachten[m
+[32m +% wollen, und wie gross unsere Zeitschritte dt sein sollen:[m
+[32m +dt = 0.01;[m
+[32m +iter = 600;[m
+[32m +[m
+[32m +%% 2. Die Anfangswerte[m
+[32m +[m
+[32m +% Da wir die Loesung der obigen DGL plotten moechten erstellen wir einen[m
+[32m +% Vektor, der die Funktionswerte enthaelt.[m
+[32m +[m
+[32m +y1 = zeros(1,iter);[m
+[32m +y2 = zeros(1,iter);[m
+[32m +[m
+[32m +% Nun koennen wir die Startwerte fuer x(0) = y1(0) und dx/dt (0) = y2(0)[m
+[32m +% setzten:[m
+[32m +[m
+[32m +y1(1) = 10;[m
+[32m +y2(1) = 0;[m
+[32m +[m
+[32m +%% 3. Die Iterationen[m
+[32m +[m
+[32m +for t = 2:iter[m
+[32m +    % Hier wird die "Steigung" im naechsten Intervall berechnet[m
+[32m +    dy1 = y2(t-1);[m
+[32m +    dy2 = sin(y1(t-1)^2) * exp(-y2(t-1));[m
+[32m +    [m
+[32m +    % Nun wird ein Linearer Verlauf in dt angenommen und der naechste Wert[m
+[32m +    % berechnet[m
+[32m +    y1(t) = y1(t-1) + dt*dy1;[m
+[32m +    y2(t) = y2(t-1) + dt*dy2;[m
+[32m +    [m
+[32m +    % Dieser Vorgang wir wiederholt, bis die gewuenschten Iterationen[m
+[32m +    % durchlaufen sind.[m
+[32m +end[m
+[32m +[m
+[32m +%% 4. Der Plot[m
+[32m +[m
