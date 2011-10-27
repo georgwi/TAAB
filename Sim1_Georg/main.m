@@ -15,15 +15,11 @@ end
 
 Plant
 
-
 x=round(N/2);
 y=round(N/2);
-tempx1 = 2;
-tempy1 = 2;
-tempx2 = 2;
-tempy2 = 2;
-tempx3 = 2;
-tempy3 = 2;
+
+positions = zeros(n,2);
+positions(positions == 0) = [2];
 
 %% Plazieren des Spielers
 
@@ -32,8 +28,10 @@ plant(x,y) = 2;
 %% Bewegen des Spielers & Animation
 
 for i = 1:t
+    % Bewegen
     move
     
+    % Animation
     imagesc (plant)
     colormap ([0 1 0; 1 0 0; 0 0 1]);
     pause (3/speed)

@@ -35,34 +35,34 @@ end
 %% Bestimmen der Richtung
 
 mgl(mgl == 0) = [];
+if length(mgl) == 0
+    disp('Festgefahren - kein möglicher Wegpunkt mehr frei!');
+    disp('Eventuell die Länge der Schlange reduzieren.');
+    break
+end
 dir = mgl(randi([1,length(mgl)]));
 
 %% Bewegen des Spielers & Freigeben des vorletzten Feldes
 
-tempx3 = tempx2; % vor-letzte Position wird zu vor-vor-letzter
-tempy3 = tempy2;
-tempx2 = tempx1; % letze Positon wird zu vor-letzter 
-tempy2 = tempy1;
-tempx1 = x; % aktuelle Position wird zu letzter
-tempy1 = y;
+% Verschieben der nt-letzten Position auf die n+1t-letzte
+for j = 0:n-2
+    positions(n-j,:) = positions(n-j-1,:);
+end
+positions(1,:) = [x y];
+
 
 if dir == 1
     x = x-1;
-    plant(x,y) = 2;
-    plant(tempx3,tempy3) = 0;
 end
 if dir == 2
     x = x+1;
-    plant(x,y) = 2;
-    plant(tempx3,tempy3) = 0;
 end
 if dir == 3
     y = y-1;
-    plant(x,y) = 2;
-    plant(tempx3,tempy3) = 0;
 end
 if dir == 4
     y = y+1;
-    plant(x,y) = 2;
-    plant(tempx3,tempy3) = 0;
 end
+
+plant(x,y) = 2;
+plant(positions(n,1),positions(n,2)) = 0;
