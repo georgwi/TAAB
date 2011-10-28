@@ -23,7 +23,9 @@ We would like to create a model of desert ant behaviour. This will include their
 
 ## Expected Results
 
-We expect to find out, that ants have a very optimized way to orientate because they have evolved since a very long time and conquered nearly every possible territory on the earth. The evolution may have taught them lots of useful tricks and methods to survive in environmets like the desert. Probably there are more ways to orientate than only by landmarks. Ants may have similar ways to find out their geographic orientation like pigeons, or use the sun as a fix-point. We are curious to find out more about that.
+We expect our simulation to be able to find short paths from Point A to desired positon B (i.e. feeder, nest) and back. We will try to be as cose to nature as possible and hope to be able to recreate some of the experimantal results given. Some results we consider particulary interesting are avoiding obstacles on returning home or finding a way to the nest after being deffered to a place where our ant has a non-fitting global vector.
+
+The evolution may have taught ants a lot of useful tricks and methods to survive in environmets like the desert. Probably there are more ways to orientate than only by landmarks. Ants may have similar ways to find out their geographic orientation like pigeons, or use the sun as a fix-point. We are curious to find out more about that.
 
 Of course we hope that there are already some good mathematical models available on ant movement, because these animals are topic of research for a long time already.
 ## References 
