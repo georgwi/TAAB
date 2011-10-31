@@ -8,6 +8,6 @@ N = 50;         % Mindestens 10 - empfohlen: Bis maximal 14
 t = 1000;       % Simulationsschritte
 speed = 30;     % je grösser desto schneller
 
-%% Länge der Schlange
+%% Laenge der Schlange
 
 n = 10         % nur 1,2,3 oder 4 - sonst Festfahren möglich

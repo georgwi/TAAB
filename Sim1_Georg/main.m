@@ -14,6 +14,7 @@ end
 %% Generieren des Spielfelds, Initialisieren der Variablen
 
 Plant
+grid on;
 
 x=round(N/2);
 y=round(N/2);

@@ -1,3 +1,13 @@
+%% Freigeben des vorletzten Feldes
+
+% Verschieben der nt-letzten Position auf die n+1t-letzte
+for j = 0:n-2
+    positions(n-j,:) = positions(n-j-1,:);
+end
+positions(1,:) = [x y];
+
+plant(positions(n,1),positions(n,2)) = 0;
+
 %% Definieren aller Möglichkeiten
 
 mgl = [1 2 3 4];
@@ -42,14 +52,7 @@ if length(mgl) == 0
 end
 dir = mgl(randi([1,length(mgl)]));
 
-%% Bewegen des Spielers & Freigeben des vorletzten Feldes
-
-% Verschieben der nt-letzten Position auf die n+1t-letzte
-for j = 0:n-2
-    positions(n-j,:) = positions(n-j-1,:);
-end
-positions(1,:) = [x y];
-
+%% Bewegen des Spielers
 
 if dir == 1
     x = x-1;
@@ -65,4 +68,4 @@ if dir == 4
 end
 
 plant(x,y) = 2;
-plant(positions(n,1),positions(n,2)) = 0;
+
