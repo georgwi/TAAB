@@ -1,6 +1,6 @@
 %% Spielfeldgrösse
 
-N = 10;         % Mindestens 10 - empfohlen: Bis maximal 14
+N = 50;         % Mindestens 10 - empfohlen: Bis maximal 14
 
 
 %% Dauer der Simulation
