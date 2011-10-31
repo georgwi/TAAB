@@ -22,7 +22,7 @@ end
 
 for i = 1:length(w)
     if L(i) == F(i) % Finden aller eindeutigen Produkte
-        a = S(i); % Identifizieren der zugehörigen Summe
+        a = S(F(i)); % Identifizieren der zugehörigen Summe
         for j = 1:length(S)
             if a == S(j) % Löschen dieser Summen
                 P(j) = -1;
@@ -32,7 +32,7 @@ for i = 1:length(w)
         end
         clc
         disp(100*i/length(w));
-        disp('Prozent');
+        disp('Prozent Step 1');
     end
 end
 
@@ -47,7 +47,7 @@ D(D==-1)=[];
 
 for i = 1:length(w)
     if L(i) ~= F(i) % Finden alle nicht eindeutigen Produkte
-        a = P(i); % Identifizieren des zugehörigen Produkts
+        a = w(i); % Identifizieren des zugehörigen Produkts
         for j = 1:length(S)
             if a == S(j) % Löschen dieser Produkte
                 P(j) = -1;
@@ -57,7 +57,7 @@ for i = 1:length(w)
         end
         clc
         disp(100*i/length(w));
-        disp('Prozent');
+        disp('Prozent Step 2');
     end
 end
 
@@ -72,7 +72,7 @@ D(D==-1)=[];
 
 for i = 1:length(w)
     if L(i) ~= F(i) % Finden aller nicht eindeutigen Summen
-        a = S(i); % Identifizieren der zugehörigen Summe
+        a = w(i); % Identifizieren der zugehörigen Summe
         for j = 1:length(S)
             if a == S(j) % Löschen dieser Summen
                 P(j) = -1;
@@ -82,7 +82,7 @@ for i = 1:length(w)
         end
         clc
         disp(100*i/length(w));
-        disp('Prozent');
+        disp('Prozent Step 3');
     end
 end
 
