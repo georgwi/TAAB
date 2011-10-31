@@ -11,3 +11,8 @@ speed = 30;     % je grösser desto schneller
 %% Länge der Schlange
 
 n = 3;          % nur 1,2 oder 3 - sonst Festfahren möglich
+
+
+%% Prüfreichweite für Vermeidung von Kollisionen
+
+p = 3;          % Prüft p Züge im Vorraus auf Wegmöglichkeiten
