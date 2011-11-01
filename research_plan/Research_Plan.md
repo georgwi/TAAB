@@ -15,21 +15,18 @@ Ants have been subject of modern research since 1848, the motivations were often
   - Is ant communication connected to ant navigation?
   - Which mechanisms and factors influence ant movement?
   - Are there different strategies to find the shortest/safest etc. path?
-  - How efficient are ant-routes in comparison the the "best" way?
 - How can we describe ant paths in mathematical terms?
-  - Which existing algorithms describe ant movement?
-  - Is there a way to improve these algorithms?
   - How efficient are our mathematical models of the real ant behaviour?
 - How does our finding apply to the real world?
-  - Are such models used already in navigation software?
-  - If not: Would they be useful?
 
-We would like to simulate ant movement and see how efficient our models are. Also we will see how close our algorithms are to real ant movement. Therefore we want to simulate different environments: Different numbers of landmarks, obstacles and paths will be added. Our relation will be the shortest, fastest or safest path.
+We would like to create a model of desert ant behaviour. This will include their search for food, their returning to the nest and their orientation with global and local vectors. Also we will see how close our algorithms are to real ant movement. Therefore we want to simulate the experiments described in the papers. Our model should be able to deal with different numbers of landmarks, obstacles and starting points. We would like to give our ants the ability to learn and improve their efficency when searching and finding food. Of course there will be some simplifications we eventually will have to deal with: Such as ... will be updated during work on the simulation.
+
 ## Expected Results
 
-We expect to find out, that ants have a very optimized way to orientate because they have evolved since a very long time and conquered nearly every possible territory on the earth. The evolution may have taught them lots of useful tricks and methods to survive in environmets like the desert. Probably there are more ways to orientate than only by landmarks. Ants may have similar ways to find out their geographic orientation like pigeons, or use the sun as a fix-point. We are curious to find out more about that.
+We expect our simulation to be able to find short paths from Point A to desired positon B (i.e. feeder, nest) and back. We will try to be as cose to nature as possible and hope to be able to recreate some of the experimantal results given. Some results we consider particulary interesting are avoiding obstacles on returning home or finding a way to the nest after being deffered to a place where our ant has a non-fitting global vector. Of course we hope that there are already some good mathematical models available on ant movement, because these animals are topic of research for a long time already.
 
-Of course we hope that there are already some good mathematical models available on ant movement, because these animals are topic of research for a long time already.
+The evolution may have taught ants a lot of useful tricks and methods to survive in environmets like the desert. Probably there are more ways to orientate than only by landmarks. Ants may have similar ways to find out their geographic orientation like pigeons, or use the sun as a fix-point. We are curious to find out more about that.
+
 ## References 
 
 - Texts taken from projects homepage
