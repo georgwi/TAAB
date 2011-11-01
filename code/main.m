@@ -1,14 +1,9 @@
-%% INIT Ant Navigation and Desert Ant Behaviour
+%% Mainfile 
+% for common configurations of the simulation (mostly testing
+% purposes
 
-mapsize = 10;
-map = zeros(mapsize);
+mapsize = 100;		% Size of landscapemap
+runduration = 100; 	% Duration of simulation
 
-landmark1 = [1 1 1; 1 1 1; 1 1 1];
-landmark2 = [2 2 2 2; 2 2 2 2; 2 2 2 2];
-
-map(1:3,1:3) = landmark1;
-
-imagesc(map)
-
-run_simulation(map,10,[7;5],[10,10],10)
-
+s = simulation(mapsize);
+s.run(runduration);
