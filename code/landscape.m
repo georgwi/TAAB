@@ -20,7 +20,7 @@ classdef landscape < handle
     	% size = n
         function L = landscape(n)
             L.size = n;
-            L.plant = ones(n);
+            L.plant = zeros(n);
         end % init
         % Load a map with a specified plant and feeder/nest positions
         function L = load_map(P, F, N)
