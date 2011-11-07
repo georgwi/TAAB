@@ -42,6 +42,10 @@ if ( plant(x,y+1) == 2 )
     mgl(4) = 0;
 end
 
+%% Testen auf Konflikte in der Zukunft
+
+testpath
+
 %% Bestimmen der Richtung
 
 mgl(mgl == 0) = [];
