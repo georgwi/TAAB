@@ -63,7 +63,7 @@ classdef ant < handle
             for i=1:length(A.move_radius)
                 temp = A.position + A.move_radius(n,:);
                 % Checks if ant's new position is inside Landscape and no obstacle are in the way
-                if((temp(1) > 0 && temp(2) > 0) && (temp(1) < L.size && temp(2) < L.size) && L.plant(temp(1), temp(2))) 
+                if((temp(1) > 0 && temp(2) > 0) && (temp(1) < L.size && temp(2) < L.size) && ~L.plant(temp(1), temp(2))) 
                     A.position = temp;
                     break
                 end
