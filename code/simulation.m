@@ -26,7 +26,6 @@ classdef simulation
         % Runs simulation for specified amount of iterations
         function run(S, iterations)
             for i=1:iterations
-                
                 S.a.move(S.l);
                 S.render()
             end % for -> iterations

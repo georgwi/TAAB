@@ -15,13 +15,37 @@ classdef landscape < handle
         feeder;
         nest;
     end
-    methods
+    methods (Access = private)
+        function generateLandscape(L, n, p)
+            L.plant = zeros(n);
+            obstacles = rand(n);
+            obstacles = obstacles - p;
+            obstacles = ceil(obstacles);
+            L.plant = L.plant + (obstacles == 1);
+            L.plant(1,:) = ones(1,n);
+            L.plant(n,:) = ones(1,n);
+            L.plant(:,1) = ones(1,n);
+            L.plant(:,n) = ones(1,n);
+            
+        end
+    end
+    methods (Access = public) 
     	%% Initialize Landscape 
     	% size = n
-        function L = landscape(n)
-            L.size = n;
-            L.plant = ones(n);
+        function L = landscape(N)
+            L.size = N;
+            L.generateLandscape(N, 0.95);
+            L.feeder = [1/3*N 2/3*N];
+            L.nest = [2/3*N 1/3*N];
         end % init
+        
+        %% Function to set nest and feeder positions (not always required)
+        % Nest = nestposition, Feeder = feederposition
+        function setNestAndFeeder(Nest, Feeder)
+            L.nest = Nest;
+            L.feeder = Feeder;
+        end
+        
         % Load a map with a specified plant and feeder/nest positions
         function L = load_map(P, F, N)
             L.plant = P;	% Set plant
