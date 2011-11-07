@@ -2,7 +2,7 @@
 % This class defines the behaviour/movement of an ant in a given landscape
 %% Variables
 % * position 
-%	1x1 int matrix
+%	1x2 int matrix
 %	Position of ant in landscape
 % * move_radius
 %	nx2 int matrix
@@ -48,7 +48,7 @@ classdef ant < handle
                 A.position(1) = x;
                 A.position(2) = y;
             end
-            if nargin > 3 
+            if nargin > 2 
                 A.create_moveradius(movewidth);
             else
                 A.create_moveradius(2);
@@ -63,8 +63,10 @@ classdef ant < handle
             for i=1:length(A.move_radius)
                 temp = A.position + A.move_radius(n,:);
                 % Checks if ant's new position is inside Landscape and no obstacle are in the way
-                if((temp(1) > 0 && temp(2) > 0) && (temp(1) < L.size && temp(2) < L.size) && ~L.plant(temp(1), temp(2))) 
-                    A.position = temp;
+                if( (temp(1) > 0 && temp(2) > 0) && ...
+                    (temp(1) < L.size && temp(2) < L.size) && ...
+                    (L.plant(temp(1), temp(2)) ~= 1) )
+                        A.position = temp;
                     break
                 end
                 if n > length(A.move_radius)

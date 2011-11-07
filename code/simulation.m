@@ -9,10 +9,11 @@
 %	defines the ant of the simulation
 
 
-classdef simulation
+classdef simulation < handle
     properties (SetAccess = private)
         l;
         a;
+        renderMat;
     end
     methods (Access = public)
     	%% Initialization
@@ -21,6 +22,7 @@ classdef simulation
         function S = simulation(N)
             S.l = landscape(N);
             S.a = ant(N);
+            S.renderMat = zeros(N);
         end
         %% Run
         % Runs simulation for specified amount of iterations
@@ -33,8 +35,11 @@ classdef simulation
         %% Render
         % renders the simulation (plant & ant)
         function render(S)
-            S.l.plant(S.a.position(1), S.a.position(2)) = 2;
-            imagesc(S.l.plant);
+            S.renderMat = S.renderMat - (S.renderMat ~= 0);
+            S.renderMat(S.a.position(1), S.a.position(2)) = 2;
+            
+            imagesc(S.l.plant + (S.renderMat ~= 0)*2);
+            colormap ([0 1 0; 1 0 0; 0 0 1]);
             pause(0.2);
         end % render
     end

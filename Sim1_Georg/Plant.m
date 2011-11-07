@@ -19,3 +19,6 @@ plant(pos(4),pos(2):pos(4)) = ones;          % waagerechte mitte
 plant(pos(3),1:pos(2)) = ones;               % waagerechte linker Rand
 plant(pos(1),pos(1):pos(3)) = ones;          % waagerechte oben links
 plant(pos(4):pos(5),pos(4):pos(5)) = ones;   % Block rechts
+
+imagesc (plant)
+colormap([0 1 0; 1 0 0])

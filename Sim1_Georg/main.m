@@ -7,7 +7,7 @@ clear all
 vars
 
 if N < 10
-    disp('bitte die SpielfeldgrÃ¶sse mindestens auf 10 setzten!')
+    disp('bitte die Spielfeldgrösse mindestens auf 10 setzten!')
     N = 10
 end
 
