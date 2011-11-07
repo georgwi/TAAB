@@ -1,6 +1,6 @@
 %% Spielfeldgrösse
 
-N = 50;         % Mindestens 10 - empfohlen: Bis maximal 14
+N = 10;         % Mindestens 10 - empfohlen: Bis maximal 14
 
 
 %% Dauer der Simulation
@@ -10,4 +10,4 @@ speed = 30;     % je grösser desto schneller
 
 %% Laenge der Schlange
 
-n = 10         % nur 1,2,3 oder 4 - sonst Festfahren möglich
+n = 3;         % nur 1,2,3 oder 4 - sonst Festfahren möglich

@@ -7,14 +7,13 @@ clear all
 vars
 
 if N < 10
-    disp('bitte die SpielfeldgrÃ¶sse mindestens auf 10 setzten!')
+    disp('bitte die Spielfeldgrösse mindestens auf 10 setzten!')
     N = 10
 end
 
 %% Generieren des Spielfelds, Initialisieren der Variablen
 
 Plant
-grid on;
 
 x=round(N/2);
 y=round(N/2);
