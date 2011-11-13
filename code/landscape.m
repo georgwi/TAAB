@@ -18,15 +18,10 @@ classdef landscape < handle
     methods (Access = private)
         function generateLandscape(L, n, p)
             L.plant = zeros(n);
-            obstacles = rand(n);
-            obstacles = obstacles - p;
-            obstacles = ceil(obstacles);
-            L.plant = L.plant + (obstacles == 1);
             L.plant(1,:) = ones(1,n);
             L.plant(n,:) = ones(1,n);
             L.plant(:,1) = ones(1,n);
             L.plant(:,n) = ones(1,n);
-            
         end
     end
     methods (Access = public) 

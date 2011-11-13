@@ -8,9 +8,9 @@ Test(:,n) = ones(1,n);
 
 %% Random Obstacles Algorithm
 % Parameters:
-num = 5;        % Anzahl der Hindernisse
-size = 10;      % Grösse der Hindernisse
-prob = 0.2;     % Wahrscheinlichkeit für "Verwindungen" und Knicke
+num = 2;        % Anzahl der Hindernisse
+size = 15;      % Grösse der Hindernisse
+prob = 0.1;     % Wahrscheinlichkeit für "Verwindungen" und Knicke
 
 % 1. Zufällige Hindernisse Plazieren Anzahl der Hindernisse soll fest sein:
 posspeicher = zeros(num,1);
@@ -34,6 +34,7 @@ end
 neigh = [-1 1 -n n];
 
 for i = 1:num
+    dir = inf;
     for j = 1:size
         % Manchmal wird eine Richtungsänderung zugelassen:
         if rand < prob
