@@ -4,11 +4,15 @@
 
 % clear everything
 
-clc; clear all; 
+clc;
+clear all; 
 
 mapsize = 100;		% Size of landscapemap
 runduration = 100; 	% Duration of simulation
+antcount = 1;       % Number of Ants
 
-s = simulation(mapsize);
-s.l.generateLandscape(50, 8, 0.7);
+s = simulation(mapsize,antcount);
+%s.l.generateLandscape(30, 20, 0.4);
+load plant1;
+s.l.load_map(plant, 1, 2);
 s.run(runduration);

@@ -13,22 +13,29 @@ classdef simulation < handle
     properties (SetAccess = private)
         l;
         a;
+        antcount;
         renderMat;
     end
     methods (Access = public)
     	%% Initialization
     	% Initalizes a simulation with landscape size N
     	% Ant is at the moment placed in the center of the map
-        function S = simulation(N)
+        function S = simulation(N, antcount)
+            S.antcount = antcount;
             S.l = landscape(N);
-            S.a = ant(N);
+            S.a = ant(5);
+            for i = 1:S.antcount
+                S.a(i) = ant(N);
+            end
             S.renderMat = zeros(N);
         end
         %% Run
         % Runs simulation for specified amount of iterations
         function run(S, iterations)
             for i=1:iterations
-                S.a.move(S.l);
+                for j = 1:S.antcount
+                    S.a(j).move(S.l);
+                end
                 S.render()
             end % for -> iterations
         end % run
@@ -36,7 +43,8 @@ classdef simulation < handle
         % renders the simulation (plant & ant)
         function render(S)
             S.renderMat = S.renderMat - (S.renderMat ~= 0);
-            S.renderMat(S.a.position(1), S.a.position(2)) = 2;
+
+            S.renderMat(S.a(1).position(1), S.a(1).position(2)) = 2;
             
             imagesc(S.l.plant + (S.renderMat ~= 0)*2);
             colormap ([0 1 0; 1 0 0; 0 0 1]);

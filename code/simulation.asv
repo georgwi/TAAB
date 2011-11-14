@@ -1,0 +1,55 @@
+%% Simulation Class
+% Handles everything simulationwise e.g. run the simulation, define simulation wide parameters
+%% Variables
+% * l
+%	Landscape
+%	defines the Landscape of the simulation
+% * a TODO decide if should/could be an array or not (simulate more than one ant in a given simulation)
+%	Ant
+%	defines the ant of the simulation
+
+
+classdef simulation < handle
+    properties (SetAccess = private)
+        l;
+        a;
+        antcount;
+        renderMat;
+    end
+    methods (Access = public)
+    	%% Initialization
+    	% Initalizes a simulation with landscape size N
+    	% Ant is at the moment placed in the center of the map
+        function S = simulation(N, antcount)
+            S.antcount = antcount;
+            S.l = landscape(N);
+            S.a = ant(5);
+            for i = 1:S.antcount
+                S.a(i) = ant(N);
+            end
+            S.renderMat = zeros(N);
+        end
+        %% Run
+        % Runs simulation for specified amount of iterations
+        function run(S, iterations)
+            for i=1:iterations
+                for j = 1:S.antcount
+                    S.a(j).move(S.l);
+                end
+                S.render()
+            end % for -> iterations
+        end % run
+        %% Render
+        % renders the simulation (plant & ant)
+        function render(S)
+            S.renderMat = S.renderMat - (S.renderMat ~= 0);
+            for i = 1:S.antcount
+                S.renderMat(S.a(i).position(1), S.a(i).position(2)) = 1;
+            end
+            
+            imagesc(S.l.plant + (S.renderMat ~= 0)*2);
+            colormap ([0 1 0; 1 0 0; 0 0 1]);
+            pause(0.2);
+        end % render
+    end
+end
