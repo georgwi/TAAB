@@ -47,9 +47,6 @@ function plant = generateLandscape(n, num, size, prob)
 		    posspeicher(i) = posspeicher(i) + dir;       
 		end
     end
-    %% End & Visualisation
-    imagesc(plant)
-    colormap([1 0 0; 0 1 0])    
 end
 
 

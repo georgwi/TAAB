@@ -22,11 +22,11 @@ classdef landscape < handle
     	% size = n
         function L = landscape(N)
             L.size = N;
-            L.feeder = [1/3*N 2/3*N];
-            L.nest = [2/3*N 1/3*N];
+            L.feeder = round([1/3*N 2/3*N]);
+            L.nest = round([2/3*N 1/3*N]);
         end % init
         
-        %% Stump for external generateLandscape function (c) Georg Wiedebach
+        %% Stump for external generateLandscape function
         function generateLandscape(L, obstaclecount, obstaclesize, obstacleprobability)
             L.plant = generateLandscape(L.size, obstaclecount, obstaclesize, obstacleprobability);
         end
@@ -39,10 +39,11 @@ classdef landscape < handle
         end
         
         % Load a map with a specified plant and feeder/nest positions
-        function L = load_map(P, F, N)
+        function L = load_map(L, P)
             L.plant = P;	% Set plant
-            L.feeder = F;	% Set feeder
-            L.nest = N;		% Set nest
+            %L.feeder = F;	% Set feeder
+            %L.nest = N;		% Set nest
+            L.size = length(P);
         end % load_map
     end % methods
     methods (Static)
