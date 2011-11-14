@@ -36,7 +36,7 @@ classdef simulation < handle
         % renders the simulation (plant & ant)
         function render(S)
             S.renderMat = S.renderMat - (S.renderMat ~= 0);
-            S.renderMat(S.a.position(1), S.a.position(2)) = 2;
+            S.renderMat(S.a.position(1), S.a.position(2)) = 1;
             
             temp = (S.renderMat ~= 0)*2;
             temp(S.l.nest(1),S.l.nest(2)) = 3;

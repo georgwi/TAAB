@@ -63,23 +63,27 @@ classdef ant < handle
                 A.create_moveradius(2);
             end
         end
+        
         %% createGlobalVector from Landscape
-        function createGlobalVector(A, L) 
-            A.global_vector = A.position - L.nest;
+        function createGlobalVector(A, L)
+            L.nest
+            A.position
+            A.global_vector =  L.nest - A.position;
         end
+        
         %% move(A,L)
         % Moves ant in landmark, according to typical ant behaviour.
         % A: Ant
         % L: Landscape
         function move(A, L)
-            dir = A.global_vector/max(abs(A.global_vector));
+            dir = A.global_vector/abs(max(A.global_vector));
             temp = A.position + round(dir);
             % Checks if ant's new position is inside Landscape and no obstacle are in the way
             if( (temp(1) > 0 && temp(2) > 0) && ...
                 (temp(1) < L.size && temp(2) < L.size) && ...
                 (L.plant(temp(1), temp(2)) ~= 1) )
                     A.position = temp;
-                    A.global_vector = A.global_vector - temp;
+                    A.global_vector = A.global_vector - round(dir);
             end
         end % move
     end % public methods

@@ -20,5 +20,6 @@ s.l.load_map(plant);
 % s = simulation(mapsize);
 % s.l.generateLandscape(30, 20, 0.4);
 
+s.a.createGlobalVector(s.l);
 
 s.run(runduration);
