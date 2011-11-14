@@ -38,8 +38,10 @@ classdef simulation < handle
             S.renderMat = S.renderMat - (S.renderMat ~= 0);
             S.renderMat(S.a.position(1), S.a.position(2)) = 2;
             
-            imagesc(S.l.plant + (S.renderMat ~= 0)*2);
-            colormap ([0 1 0; 1 0 0; 0 0 1]);
+            temp = (S.renderMat ~= 0)*2;
+            temp(S.l.nest(1),S.l.nest(2)) = 3;
+            imagesc(S.l.plant + temp);
+            colormap ([0 1 0; 1 0 0; 0 0 1;0 0 0]);
             pause(0.2);
         end % render
     end

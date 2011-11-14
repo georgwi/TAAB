@@ -39,10 +39,8 @@ classdef landscape < handle
         end
         
         % Load a map with a specified plant and feeder/nest positions
-        function L = load_map(L, P)
+        function load_map(L, P)
             L.plant = P;	% Set plant
-            %L.feeder = F;	% Set feeder
-            %L.nest = N;		% Set nest
             L.size = length(P);
         end % load_map
     end % methods

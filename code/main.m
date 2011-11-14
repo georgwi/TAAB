@@ -4,12 +4,21 @@
 
 % clear everything
 
-clc; clear all; 
+clc;
+clear all; 
 
-mapsize = 100;		% Size of landscapemap
 runduration = 100; 	% Duration of simulation
 
+%% Option1 saved Map
+load plant1;
+mapsize = length(plant1);
 s = simulation(mapsize);
-s.l.generateLandscape(0, 18, 0.8);
-s.a.createGlobalVector(s.l);
+s.l.load_map(plant);
+
+%% Option2 random Map
+% mapsize = 100;
+% s = simulation(mapsize);
+% s.l.generateLandscape(30, 20, 0.4);
+
+
 s.run(runduration);
