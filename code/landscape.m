@@ -16,24 +16,21 @@ classdef landscape < handle
         nest;
     end
     methods (Access = private)
-        function generateLandscape(L, n, p)
-            L.plant = zeros(n);
-            L.plant(1,:) = ones(1,n);
-            L.plant(n,:) = ones(1,n);
-            L.plant(:,1) = ones(1,n);
-            L.plant(:,n) = ones(1,n);
-        end
     end
     methods (Access = public) 
     	%% Initialize Landscape 
     	% size = n
         function L = landscape(N)
             L.size = N;
-            L.generateLandscape(N, 0.95);
             L.feeder = [1/3*N 2/3*N];
             L.nest = [2/3*N 1/3*N];
         end % init
         
+        %% Stump for external generateLandscape function (c) Georg Wiedebach
+        function generateLandscape(L, obstaclecount, obstaclesize, obstacleprobability)
+            L.plant = generateLandscape(L.size, obstaclecount, obstaclesize, obstacleprobability);
+        end
+
         %% Function to set nest and feeder positions (not always required)
         % Nest = nestposition, Feeder = feederposition
         function setNestAndFeeder(Nest, Feeder)
