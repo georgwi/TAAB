@@ -16,7 +16,7 @@
 %   Is a 1x2 vector defining the x-y-velocity of our ant
 
 classdef ant < handle
-    properties (SetAccess = private)
+    properties (SetAccess = public)
         position
         move_radius
         move_direction
@@ -51,10 +51,9 @@ classdef ant < handle
     	% x,y: starting positions
     	% movewidth: size for created generated move_radius matrix
         function A = ant(x,y,movewidth)
-            if nargin == 1
-                A.position = [90 70];                
-                %A.position(1) = round(x/2);
-                %A.position(2) = round(x/2);
+            if nargin == 1              
+                A.position(1) = round(x/2);
+                A.position(2) = round(x/2);
             elseif nargin > 1
                 A.position(1) = x;
                 A.position(2) = y;
@@ -123,9 +122,7 @@ classdef ant < handle
                     || temp * A.move_direction' <= -1
                 % The ant "turns" in direction of secdir. New secdir is old
                 % maindirection rotated over old secdir. (mirror)
-                % rot rotates against clock - the ant will turn right at walls.
-                % (for clockwise rotation change the sign of both sinus(pi/4)
-                % - the ant will turn left at walls)
+                % rot rotates
                 rot = [cos(pi/4), sin(pi/4); -sin(pi/4), cos(pi/4)];
                 maindir = round(maindir * rot);
                 

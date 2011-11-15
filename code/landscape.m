@@ -23,8 +23,7 @@ classdef landscape < handle
         function L = landscape(N)
             L.size = N;
             L.feeder = round([1/3*N 2/3*N]);
-            L.nest = [30 40]; % Testing
-            %L.nest = round([2/3*N 1/3*N]);
+            L.nest = round([2/3*N 1/3*N]);
         end % init
         
         %% Stump for external generateLandscape function

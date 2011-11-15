@@ -13,7 +13,6 @@ classdef simulation < handle
     properties (SetAccess = private)
         l;
         a;
-        renderMat;
     end
     methods (Access = public)
     	%% Initialization
@@ -22,13 +21,13 @@ classdef simulation < handle
         function S = simulation(N)
             S.l = landscape(N);
             S.a = ant(N);
-            S.renderMat = zeros(N);
         end
         %% Run
         % Runs simulation for specified amount of iterations
         function run(S, iterations)
             figure(1)
             imagesc(S.l.plant)
+            axis square
             colormap ([0 1 0; 1 0 0; 1 0 0])
             hold on
             i = 1;
@@ -45,6 +44,8 @@ classdef simulation < handle
                 '.','Color','b')
             plot(S.l.nest(1), S.l.nest(2),...
                 'o','Color','k')
+            plot(S.a.position(1)-S.a.move_direction(1), S.a.position(2)-S.a.move_direction(2),...
+                '.','Color','w')
             
             pause(0.1)
         end % render
