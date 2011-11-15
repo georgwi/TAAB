@@ -22,6 +22,7 @@ classdef ant < handle
         move_direction
         global_vector
         landmarks
+        nest
     end
     methods (Access = private)
     	% creates the move_radius matrix
@@ -62,12 +63,12 @@ classdef ant < handle
             else
                 A.create_moveradius(2);
             end
+            A.move_direction = [0 0];
+            A.nest = 0; % True or False
         end
         
         %% createGlobalVector from Landscape
         function createGlobalVector(A, L)
-            L.nest
-            A.position
             A.global_vector =  L.nest - A.position;
         end
         
@@ -76,15 +77,60 @@ classdef ant < handle
         % A: Ant
         % L: Landscape
         function move(A, L)
-            dir = A.global_vector/abs(max(A.global_vector));
-            temp = A.position + round(dir);
-            % Checks if ant's new position is inside Landscape and no obstacle are in the way
-            if( (temp(1) > 0 && temp(2) > 0) && ...
-                (temp(1) < L.size && temp(2) < L.size) && ...
-                (L.plant(temp(1), temp(2)) ~= 1) )
-                    A.position = temp;
-                    A.global_vector = A.global_vector - round(dir);
+            % if the ant reached the nest no move is needed.
+            if A.global_vector == 0
+                A.nest = 1;
+                disp('nest erreicht')
+                return
             end
+            
+            % Maindirection and seconddirection are calculated from the
+            % direction given by the global vercor. The seconddirection gets a
+            % Probability smaller than 0.5 based on the angle between
+            % maindirection and global vector.
+            maindir = round(...
+                A.global_vector/max(abs(A.global_vector))...
+            );
+            secdir = sign(...
+                A.global_vector - maindir * min(abs(A.global_vector))...
+            );
+            secprob = min(abs(A.global_vector)/max(abs(A.global_vector)));
+            
+            if secdir(1) == 0 && secdir(2) == 0
+                secdir = maindir;
+            end
+            if secprob == 0
+                secdir = maindir;
+            end
+            if secprob <= 0.5
+                tempdir = maindir;
+                maindir = secdir;
+                secdir = tempdir;
+                secprob = 1-secprob;
+            end
+            
+            temp = maindir;
+            if rand < secprob
+                temp = secdir;
+            end
+            
+            % Obstacle-Avoiding: New maindir untill
+            % possible move is found!
+            while L.plant(A.position(2) + temp(2), A.position(1) + temp(1)) ~= 0 ...
+                % The ant "turns" in direction of secdir. New secdir is old
+                % maindirection rotated over old secdir. (mirror)
+                % rot rotates against clock
+                rot = [cos(pi/4), sin(pi/4); -sin(pi/4), cos(pi/4)];
+                maindir = round(maindir * rot);
+                
+                temp = maindir;
+
+            end
+
+            A.move_direction = temp;
+            A.position = A.position + temp;
+            A.global_vector = A.global_vector - temp;
+         
         end % move
     end % public methods
     methods (Static)

@@ -10,10 +10,10 @@ clear all;
 runduration = 100; 	% Duration of simulation
 
 %% Option1 saved Map
-load plant1;
-mapsize = length(plant1);
+T = load('plant1');
+mapsize = length(T.plant);
 s = simulation(mapsize);
-s.l.load_map(plant);
+s.l.load_map(T.plant);
 
 %% Option2 random Map
 % mapsize = 100;
@@ -21,5 +21,4 @@ s.l.load_map(plant);
 % s.l.generateLandscape(30, 20, 0.4);
 
 s.a.createGlobalVector(s.l);
-
 s.run(runduration);

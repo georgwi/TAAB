@@ -27,22 +27,29 @@ classdef simulation < handle
         %% Run
         % Runs simulation for specified amount of iterations
         function run(S, iterations)
-            for i=1:iterations
-                S.a.move(S.l);
+            figure(1)
+            imagesc(S.l.plant)
+            colormap ([0 1 0; 1 0 0; 1 0 0])
+            hold on
+            i = 1;
+            while i <= iterations && S.a.nest ~= 1
+                S.a.move(S.l)
                 S.render()
-            end % for -> iterations
+            end % while ant is not at nest.
         end % run
         %% Render
         % renders the simulation (plant & ant)
         function render(S)
-            S.renderMat = S.renderMat - (S.renderMat ~= 0);
-            S.renderMat(S.a.position(1), S.a.position(2)) = 1;
+%             imagesc(S.l.plant)
+%             colormap ([0 1 0; 1 0 0; 1 0 0])
+%             hold on
+            figure(1)
+            plot(S.a.position(1), S.a.position(2),...
+                '.','Color','b')
+            plot(S.l.nest(1), S.l.nest(2),...
+                'o','Color','k')
             
-            temp = (S.renderMat ~= 0)*2;
-            temp(S.l.nest(1),S.l.nest(2)) = 3;
-            imagesc(S.l.plant + temp);
-            colormap ([0 1 0; 1 0 0; 0 0 1;0 0 0]);
-            pause(0.2);
+            pause(0.1)
         end % render
     end
 end
