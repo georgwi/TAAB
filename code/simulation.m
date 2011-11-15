@@ -40,9 +40,6 @@ classdef simulation < handle
         %% Render
         % renders the simulation (plant & ant)
         function render(S)
-%             imagesc(S.l.plant)
-%             colormap ([0 1 0; 1 0 0; 1 0 0])
-%             hold on
             figure(1)
             plot(S.a.position(1), S.a.position(2),...
                 '.','Color','b')

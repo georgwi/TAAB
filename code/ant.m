@@ -117,13 +117,15 @@ classdef ant < handle
             if rand < secprob
                 temp = secdir;
             end
-            % Obstacle-Avoiding: New maindir untill possible move is found!
-            % 180deg-Turn-Avoiding: New maindir if ant tries to turn around
+            % Obstacle-Avoiding: New maindirection untill possible move is found!
+            % 180deg-Turn-Avoiding: New maindirection if ant tries to turn around
             while L.plant(A.position(2) + temp(2), A.position(1) + temp(1)) ~= 0 ...
                     || temp * A.move_direction' <= -1
                 % The ant "turns" in direction of secdir. New secdir is old
                 % maindirection rotated over old secdir. (mirror)
-                % rot rotates against clock
+                % rot rotates against clock - the ant will turn right at walls.
+                % (for clockwise rotation change the sign of both sinus(pi/4)
+                % - the ant will turn left at walls)
                 rot = [cos(pi/4), sin(pi/4); -sin(pi/4), cos(pi/4)];
                 maindir = round(maindir * rot);
                 
