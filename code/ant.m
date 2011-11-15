@@ -52,8 +52,9 @@ classdef ant < handle
     	% movewidth: size for created generated move_radius matrix
         function A = ant(x,y,movewidth)
             if nargin == 1
-                A.position(1) = round(x/2);
-                A.position(2) = round(x/2);
+                A.position = [90 70];                
+                %A.position(1) = round(x/2);
+                %A.position(2) = round(x/2);
             elseif nargin > 1
                 A.position(1) = x;
                 A.position(2) = y;
@@ -96,6 +97,8 @@ classdef ant < handle
             );
             secprob = min(abs(A.global_vector)/max(abs(A.global_vector)));
             
+            % the following tests make sure no error is produced because of
+            % limit cases.
             if secdir(1) == 0 && secdir(2) == 0
                 secdir = maindir;
             end
@@ -109,14 +112,15 @@ classdef ant < handle
                 secprob = 1-secprob;
             end
             
+            
             temp = maindir;
             if rand < secprob
                 temp = secdir;
             end
-            
-            % Obstacle-Avoiding: New maindir untill
-            % possible move is found!
+            % Obstacle-Avoiding: New maindir untill possible move is found!
+            % 180deg-Turn-Avoiding: New maindir if ant tries to turn around
             while L.plant(A.position(2) + temp(2), A.position(1) + temp(1)) ~= 0 ...
+                    || temp * A.move_direction' <= -1
                 % The ant "turns" in direction of secdir. New secdir is old
                 % maindirection rotated over old secdir. (mirror)
                 % rot rotates against clock
@@ -124,7 +128,6 @@ classdef ant < handle
                 maindir = round(maindir * rot);
                 
                 temp = maindir;
-
             end
 
             A.move_direction = temp;
