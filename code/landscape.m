@@ -13,6 +13,7 @@ classdef landscape < handle
         size;
         plant;
         feeder;
+        feeder_radius
         nest;
     end
     methods (Access = private)
@@ -24,6 +25,7 @@ classdef landscape < handle
             L.size = N;
             L.feeder = round([1/3*N 2/3*N]);
             L.nest = round([2/3*N 1/3*N]);
+            L.feeder_radius = 30;
         end % init
         
         %% Stump for external generateLandscape function
