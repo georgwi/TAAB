@@ -30,9 +30,16 @@ classdef simulation < handle
             axis square
             colormap ([0 1 0; 1 0 0; 1 0 0])
             hold on
+            a = 0;
+            while(S.a.has_food == 0)
+                S.a.findFood(S.l);
+                S.render()
+                a = a+1;
+            end
+            a
             i = 1;
             while i <= iterations && S.a.nest ~= 1
-                S.a.move(S.l)
+                S.a.returnToNest(S.l)
                 S.render()
             end % while ant is not at nest.
         end % run
@@ -40,14 +47,13 @@ classdef simulation < handle
         % renders the simulation (plant & ant)
         function render(S)
             figure(1)
-            plot(S.a.position(1), S.a.position(2),...
-                '.','Color','b')
-            plot(S.l.nest(1), S.l.nest(2),...
-                'o','Color','k')
+            plot(S.a.position(1), S.a.position(2),'.','Color','b')
+            plot(S.l.nest(1), S.l.nest(2),'o','Color','k')
+            plot(S.l.feeder(1), S.l.feeder(2), 'x', 'Color', 'k');
             plot(S.a.position(1)-S.a.move_direction(1), S.a.position(2)-S.a.move_direction(2),...
                 '.','Color','w')
-            
-            pause(0.1)
+            % Global Vector plotten?
+            % pause(0.01)
         end % render
     end
 end

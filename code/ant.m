@@ -21,6 +21,7 @@ classdef ant < handle
         move_radius
         move_direction
         global_vector
+        has_food
         landmarks
         nest
     end
@@ -59,42 +60,76 @@ classdef ant < handle
                 A.position(2) = y;
             end
             if nargin > 2 
-                A.create_moveradius(movewidth);
+               % A.create_moveradius(movewidth);
+                A.move_radius = [1 1; 1 0; 0 1; 1 -1; -1 1; -1 0; 0 -1; -1 -1];
             else
-                A.create_moveradius(2);
+               % A.create_moveradius(2);              
+               A.move_radius = [1 1; 1 0; 0 1; 1 -1; -1 1; -1 0; 0 -1; -1 -1];
             end
-            A.move_direction = [0 0];
+            A.move_direction = [0 1];
             A.nest = 0; % True or False
+            A.has_food = 0;
         end
         
         %% createGlobalVector from Landscape
         function createGlobalVector(A, L)
             A.global_vector =  L.nest - A.position;
         end
+        %% findFood
+        % Moves ant randomly in landscape to find the feeder
+        % Ant should learn landscapes and path integrate the global
+        % vector 
+        % return true if found food
+        % return false if not
+        % calculate localvectors into move vector
+        function findFood(A, L)
+            if A.position(1) == L.feeder(1) && A.position(2) == L.feeder(2)
+                A.has_food = 1;
+                disp('found food');
+                return
+            end
+            dir = A.move_radius(randi(length(A.move_radius)),:);
+            while dir * A.move_direction' <= 0
+                dir = A.move_radius(randi(length(A.move_radius)),:);
+            end
+            A.move_direction = dir;
+            A.move(L, dir);
+            A.has_food = 0;
+        end
+        
+        %% returnToNest
+        % Ant returns to nest after she found food
+        % Tries to go the mist direct way with global_vector
+        % which points straight to the nest
+        
+        function returnToNest(A, L)
+             % if the ant reached the nest no move is needed.
+            if A.global_vector == 0
+                A.nest = 1;
+                disp('reached nest')
+                return
+            end
+            
+            A.move(L, A.global_vector);
+            
+        end
         
         %% move(A,L)
         % Moves ant in landmark, according to typical ant behaviour.
         % A: Ant
         % L: Landscape
-        function move(A, L)
-            % if the ant reached the nest no move is needed.
-            if A.global_vector == 0
-                A.nest = 1;
-                disp('nest erreicht')
-                return
-            end
-            
+        function move(A, L, move_vector)
             % Maindirection and seconddirection are calculated from the
-            % direction given by the global vercor. The seconddirection gets a
+            % direction given by the global veor. The seconddirection gets a
             % Probability smaller than 0.5 based on the angle between
             % maindirection and global vector.
             maindir = round(...
-                A.global_vector/max(abs(A.global_vector))...
+                move_vector/max(abs(move_vector))...
             );
             secdir = sign(...
-                A.global_vector - maindir * min(abs(A.global_vector))...
+                move_vector - maindir * min(abs(move_vector))...
             );
-            secprob = min(abs(A.global_vector)/max(abs(A.global_vector)));
+            secprob = min(abs(move_vector)/max(abs(move_vector)));
             
             % the following tests make sure no error is produced because of
             % limit cases.
@@ -116,17 +151,22 @@ classdef ant < handle
             if rand < secprob
                 temp = secdir;
             end
-            % Obstacle-Avoiding: New maindirection untill possible move is found!
+            
+            n = 1;
+            phi = pi/4;
+            rot = [cos(phi), n*sin(phi); -n*sin(phi), cos(phi)];
+
+            % Obstacle-Avoiding: New maindirection until possible move is found!
             % 180deg-Turn-Avoiding: New maindirection if ant tries to turn around
             while L.plant(A.position(2) + temp(2), A.position(1) + temp(1)) ~= 0 ...
-                    || temp * A.move_direction' <= -1
+                    || ( temp(1) == -A.move_direction(1) && temp(2) == -A.move_direction(2) )
+                    %|| temp * A.move_direction' <= -1
+                
                 % The ant "turns" in direction of secdir. New secdir is old
                 % maindirection rotated over old secdir. (mirror)
                 % rot rotates
-                rot = [cos(pi/4), sin(pi/4); -sin(pi/4), cos(pi/4)];
-                maindir = round(maindir * rot);
                 
-                temp = maindir;
+                temp = round(temp * rot);
             end
 
             A.move_direction = temp;

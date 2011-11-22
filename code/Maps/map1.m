@@ -11,5 +11,6 @@ n = 100;
     plant(posy(1):posy(5),posx(2)) = ones;
     plant(posy(2):posy(4),posx(3)) = ones;
     
-antstart = [posx(4),posy(3)];
 neststart = [posx(1),posy(3)];
+antstart = neststart;
+feederstart = [posx(4), posy(3)];

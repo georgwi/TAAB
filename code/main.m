@@ -6,6 +6,7 @@
 
 clc;
 clear all; 
+clf; 
 
 runduration = 100; 	% Duration of simulation
 
@@ -26,7 +27,7 @@ s = simulation(mapsize);
 s.l.load_map(plant);
 s.a.position = antstart;
 s.l.nest = neststart;
-
+s.l.feeder = feederstart;
 %% Option2 random Map
 % mapsize = 100;
 % s = simulation(mapsize);
