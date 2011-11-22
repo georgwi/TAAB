@@ -92,6 +92,11 @@ classdef ant < handle
             while dir * A.move_direction' <= 0
                 dir = A.move_radius(randi(length(A.move_radius)),:);
             end
+            
+            if norm(A.position - L.feeder) < L.feeder_radius
+                dir = L.feeder - A.position;
+            end
+            
             A.move_direction = dir;
             A.move(L, dir);
             A.has_food = 0;

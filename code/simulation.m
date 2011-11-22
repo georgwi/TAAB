@@ -30,13 +30,10 @@ classdef simulation < handle
             axis square
             colormap ([0 1 0; 1 0 0; 1 0 0])
             hold on
-            a = 0;
             while(S.a.has_food == 0)
                 S.a.findFood(S.l);
                 S.render()
-                a = a+1;
             end
-            a
             i = 1;
             while i <= iterations && S.a.nest ~= 1
                 S.a.returnToNest(S.l)
@@ -52,6 +49,8 @@ classdef simulation < handle
             plot(S.l.feeder(1), S.l.feeder(2), 'x', 'Color', 'k');
             plot(S.a.position(1)-S.a.move_direction(1), S.a.position(2)-S.a.move_direction(2),...
                 '.','Color','w')
+            plot(S.l.feeder(1) + S.l.feeder_radius*cos(2*pi/40*(0:40)), ...
+                S.l.feeder(2) + S.l.feeder_radius*sin(2*pi/40*(0:40)), 'Color', 'k')
             % Global Vector plotten?
             % pause(0.01)
         end % render
