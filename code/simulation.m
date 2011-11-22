@@ -19,8 +19,13 @@ classdef simulation < handle
     	% Initalizes a simulation with landscape size N
     	% Ant is at the moment placed in the center of the map
         function S = simulation(N)
-            S.l = landscape(N);
-            S.a = ant(N);
+            if(nargin == 0)
+                S.l = landscape(1);
+                S.a = ant(1);
+            else
+                S.l = landscape(N);
+                S.a = ant(N);
+            end
         end
         %% Run
         % Runs simulation for specified amount of iterations

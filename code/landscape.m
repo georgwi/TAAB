@@ -26,10 +26,12 @@ classdef landscape < handle
             L.feeder = round([1/3*N 2/3*N]);
             L.nest = round([2/3*N 1/3*N]);
         end % init
-        % set Feeder Radius for better observability;
+        
+        %% set Feeder Radius for better observability;
         function setFeederRadius(L, r)
             L.feeder_radius = r;
         end
+        
         %% Stump for external generateLandscape function
         function generateLandscape(L, obstaclecount, obstaclesize, obstacleprobability)
             L.plant = generateLandscape(L.size, obstaclecount, obstaclesize, obstacleprobability);
@@ -50,10 +52,16 @@ classdef landscape < handle
         
         function load_image(L, image, type) 
             img = imread(image, type);
-            L.plant = img(:,:,1)             % GRUEN
-            [a,b] = find(img(:,:,2) == 0)    % BLAU
-            pause(5)
-            L.feeder = find(img(:,:,3) == 0) % ROT
+            L.size = length(img(:,:,1));
+            L.plant = ~img(:,:,1);                        % use hex #ffffff
+            [y, x] = find(img(:,:,2) == 238, 1, 'first'); % use hex #1100ee
+            L.nest = [x, y];
+            [y, x] = find(img(:,:,3) == 238, 1, 'first'); % use hex 11ee00
+            L.feeder = [x, y];
+            L.plant(1,:) = ones(1,L.size);
+            L.plant(L.size,:) = ones(1,L.size);
+            L.plant(:,1) = ones(1,L.size);
+            L.plant(:,L.size) = ones(1,L.size);
         end
         
     end % methods
