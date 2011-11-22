@@ -44,12 +44,10 @@ classdef landscape < handle
             L.size = length(P);
         end % load_map
         
-        function load_image(L, image, type) 
-            img = imread(image, type);
-            L.plant = img(:,:,1)             % GRUEN
-            [a,b] = find(img(:,:,2) == 0)    % BLAU
-            pause(5)
-            L.feeder = find(img(:,:,3) == 0) % ROT
+        function L = load_image(image, type) 
+            img = imgread(image, type);
+            L.plant = img(:,:,1);
+            L.nest = img(:,:,
         end
         
     end % methods
