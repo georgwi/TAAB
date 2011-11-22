@@ -25,9 +25,11 @@ classdef landscape < handle
             L.size = N;
             L.feeder = round([1/3*N 2/3*N]);
             L.nest = round([2/3*N 1/3*N]);
-            L.feeder_radius = 30;
         end % init
-        
+        % set Feeder Radius for better observability;
+        function setFeederRadius(L, r)
+            L.feeder_radius = r;
+        end
         %% Stump for external generateLandscape function
         function generateLandscape(L, obstaclecount, obstaclesize, obstacleprobability)
             L.plant = generateLandscape(L.size, obstaclecount, obstaclesize, obstacleprobability);
