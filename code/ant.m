@@ -18,13 +18,15 @@
 classdef ant < handle
     properties (SetAccess = public)
         position
-        nest
-        local_vectors
-        view_radius = 20;
-        move_radius
+        move_radius = [1 1; 1 0; 0 1; 1 -1; -1 1; -1 0; 0 -1; -1 -1];
         move_direction
         global_vector
         has_food
+        landmarks
+        nest
+        obstacle_vector
+        rotation
+        view_radius = 20;
     end
     methods (Access = private)
     	% creates the move_radius matrix
@@ -75,16 +77,11 @@ classdef ant < handle
                 A.position(1) = x;
                 A.position(2) = y;
             end
-            if nargin > 2 
-               % A.create_moveradius(movewidth);
-               A.move_radius = [1 1; 1 0; 0 1; 1 -1; -1 1; -1 0; 0 -1; -1 -1];
-            else
-               % A.create_moveradius(2);              
-               A.move_radius = [1 1; 1 0; 0 1; 1 -1; -1 1; -1 0; 0 -1; -1 -1];
-            end
+            A.rotation = -1;
             A.move_direction = [0 1];
             A.nest = 0; % True or False
             A.has_food = 0;
+            A.obstacle_vector = zeros(100,100,2);
         end
         
         %% createGlobalVector from Landscape
@@ -139,6 +136,17 @@ classdef ant < handle
         % A: Ant
         % L: Landscape
         function move(A, L, move_vector)
+            for i = 1:8
+                move_vector(1) = move_vector(1)...
+                    + A.obstacle_vector(A.position(1) + A.move_radius(i,1), A.position(2) + A.move_radius(i,2), 1);
+                move_vector(2) = move_vector(2)...
+                    + A.obstacle_vector(A.position(1) + A.move_radius(i,1), A.position(2) + A.move_radius(i,2), 2);
+            end
+            while move_vector(1) == 0 && move_vector(2) == 0
+                move_vector = A.move_radius(randi([1,8]));
+            end
+
+            
             % Maindirection and seconddirection are calculated from the
             % direction given by the global veor. The seconddirection gets a
             % Probability smaller than 0.5 based on the angle between
@@ -172,17 +180,32 @@ classdef ant < handle
                 temp = secdir;
             end
             
-            n = 1;
+            % If there is no obstacle near the ant the rotation-direction
+            % can change.
+            count = 0;
+            for i = 1:8
+                count = count + L.plant(A.position(2) + A.move_radius(i,2), A.position(1) + A.move_radius(i,1));
+            end
+            if count == 0
+                A.rotation = sign(rand-0.5);
+            end
+            
             phi = pi/4;
-            rot = [cos(phi), n*sin(phi); -n*sin(phi), cos(phi)];
+            rot = [cos(phi), A.rotation*sin(phi); -A.rotation*sin(phi), cos(phi)];
 
             % Obstacle-Avoiding: New maindirection until possible move is found!
             % 180deg-Turn-Avoiding: New maindirection if ant tries to turn around
             while L.plant(A.position(2) + temp(2), A.position(1) + temp(1)) ~= 0 ...
                     || ( temp(1) == -A.move_direction(1) && temp(2) == -A.move_direction(2) )
-                    %|| temp * A.move_direction' <= -1
-                A.local_vectors(A.position(1), A.position(2), 1) = -temp(1);
-                A.local_vectors(A.position(1), A.position(2), 2) = -temp(2);
+                
+                % A obstacle_vector is created and helps the ant to avoid the wall
+                % and endless iterations.
+                A.obstacle_vector(A.position(1) + temp(1), A.position(2) + temp(2), 1) = ...
+                    A.obstacle_vector(A.position(1) + temp(1), A.position(2) + temp(2), 1) ...
+                    - 5*temp(1);
+                A.obstacle_vector(A.position(1) + temp(1), A.position(2) + temp(2), 2) = ...
+                    A.obstacle_vector(A.position(1) + temp(1), A.position(2) + temp(2), 2) ...
+                    - 5*temp(2);
                 
                 % The ant "turns" in direction of secdir. New secdir is old
                 % maindirection rotated over old secdir. (mirror)
@@ -194,6 +217,7 @@ classdef ant < handle
             A.move_direction = temp;
             A.position = A.position + temp;
             A.global_vector = A.global_vector - temp;
+         
         end % move
     end % public methods
     methods (Static)
