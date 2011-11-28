@@ -11,6 +11,7 @@
 classdef landscape < handle
     properties (SetAccess = public)
         size;
+        landmarks;
         plant;
         feeder;
         feeder_radius
@@ -44,6 +45,11 @@ classdef landscape < handle
             L.feeder = Feeder;
         end
         
+        %% Set Landmarks 
+        function setLandmarks(Landmarks)
+            L.landmarks = Landmarks;
+        end
+        
         % Load a map with a specified plant and feeder/nest positions
         function load_map(L, P)
             L.plant = P;	% Set plant
@@ -52,11 +58,14 @@ classdef landscape < handle
         
         function load_image(L, image, type) 
             img = imread(image, type);
+            img(:,:,1)
             L.size = length(img(:,:,1));
             L.plant = ~img(:,:,1);                        % use hex #ffffff
+            [y, x] = find(img(:,:,2) == 153);
+            L.landmarks = [x, y]
             [y, x] = find(img(:,:,2) == 238, 1, 'first'); % use hex #1100ee
             L.nest = [x, y];
-            [y, x] = find(img(:,:,3) == 238, 1, 'first'); % use hex 11ee00
+            [y, x] = find(img(:,:,3) == 238, 1, 'first'); % use hex #11ee00
             L.feeder = [x, y];
             L.plant(1,:) = ones(1,L.size);
             L.plant(L.size,:) = ones(1,L.size);

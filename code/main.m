@@ -6,7 +6,8 @@
 
 clc;
 clear all; 
-clf; 
+clf;
+close all;
 
 runduration = 100; 	% Duration of simulation
 
@@ -16,7 +17,7 @@ addpath('Maps');
 % all saved Maps can be found in the code-folder/Maps
 
 %% two Obstacles - Experiment 1
-map1
+% map1
 
 
 %% map2
@@ -29,7 +30,7 @@ map1
 % s.a.position = [2 2];
 % s.l.nest = [2 2];
 
-%s = simulation(100);
+s = simulation(100);
 
 s.l.load_image('test', 'png')
 s.a.position = s.l.nest;

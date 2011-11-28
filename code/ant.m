@@ -18,12 +18,13 @@
 classdef ant < handle
     properties (SetAccess = public)
         position
+        nest
+        local_vectors
+        view_radius = 20;
         move_radius
         move_direction
         global_vector
         has_food
-        landmarks
-        nest
     end
     methods (Access = private)
     	% creates the move_radius matrix
@@ -41,10 +42,25 @@ classdef ant < handle
                 end
             end
         end
-        % calculate the velocity in the given landscape
-        function calc_move_direction(A, L)
-            v = 2;
-            A.velocity = [2 + v*randn() 2 + v*randn()];
+        %% Function to update local vectors on seeable landmarks (only when returning)
+        function update_lv(A)
+        	for i = 1:size(A.landmarks)
+        		lm = A.landmarks(i,:);
+        		if norm(lm - A.position) < A.view_radius
+        			A.local_vectors(i,:) = [1 10];
+        		end
+        	end
+        end
+        %% Function to calculate a second direction from given local vectors
+        function [x y] = calc_lv_direction(A, L)
+            temp = [0 0];
+        	for i=1:size(L.landmarks)
+                if norm(lm - A.position) < A.view_radius
+                    temp = temp + A.local_vectors(i,:);
+                end
+            end
+            x = temp(1);
+            y = temp(2);
         end
     end % private methods
     methods (Access = public)
@@ -61,7 +77,7 @@ classdef ant < handle
             end
             if nargin > 2 
                % A.create_moveradius(movewidth);
-                A.move_radius = [1 1; 1 0; 0 1; 1 -1; -1 1; -1 0; 0 -1; -1 -1];
+               A.move_radius = [1 1; 1 0; 0 1; 1 -1; -1 1; -1 0; 0 -1; -1 -1];
             else
                % A.create_moveradius(2);              
                A.move_radius = [1 1; 1 0; 0 1; 1 -1; -1 1; -1 0; 0 -1; -1 -1];
@@ -93,10 +109,9 @@ classdef ant < handle
                 dir = A.move_radius(randi(length(A.move_radius)),:);
             end
             
-            if norm(A.position - L.feeder) < L.feeder_radius
+            if norm(A.position - L.feeder) < A.view_radius
                 dir = L.feeder - A.position;
             end
-            
             A.move_direction = dir;
             A.move(L, dir);
             A.has_food = 0;
@@ -166,6 +181,8 @@ classdef ant < handle
             while L.plant(A.position(2) + temp(2), A.position(1) + temp(1)) ~= 0 ...
                     || ( temp(1) == -A.move_direction(1) && temp(2) == -A.move_direction(2) )
                     %|| temp * A.move_direction' <= -1
+                A.local_vectors(A.position(1), A.position(2), 1) = -temp(1);
+                A.local_vectors(A.position(1), A.position(2), 2) = -temp(2);
                 
                 % The ant "turns" in direction of secdir. New secdir is old
                 % maindirection rotated over old secdir. (mirror)
@@ -177,7 +194,6 @@ classdef ant < handle
             A.move_direction = temp;
             A.position = A.position + temp;
             A.global_vector = A.global_vector - temp;
-         
         end % move
     end % public methods
     methods (Static)

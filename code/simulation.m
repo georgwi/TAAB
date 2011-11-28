@@ -13,6 +13,8 @@ classdef simulation < handle
     properties (SetAccess = private)
         l;
         a;
+        r_ant
+        r_ant_view
     end
     methods (Access = public)
     	%% Initialization
@@ -44,21 +46,31 @@ classdef simulation < handle
         function init_render(S)
             figure(1)
             imagesc(S.l.plant)
-            axis square
+            axis off, axis equal
             colormap ([0 1 0; 1 0 0; 1 0 0])
             hold on
             plot(S.l.nest(1), S.l.nest(2),'o','Color','k')
             plot(S.l.feeder(1), S.l.feeder(2), 'x', 'Color', 'k');
+            S.r_ant = plot(S.a.position(1), S.a.position(2),'.','Color','b');
+            S.r_ant_view = plot(S.a.position(1) + S.a.view_radius*cos(2*pi/8*(0:8)), ...
+                S.a.position(2) + S.a.view_radius*sin(2*pi/8*(0:8)), 'Color', 'k');
+            hold on
         end
         %% Render
         % renders the simulation (plant & ant)
         function render(S)
             figure(1)
-            plot(S.a.position(1), S.a.position(2),'.','Color','b')
-            plot(S.a.position(1)-S.a.move_direction(1), S.a.position(2)-S.a.move_direction(2),...
-                '.','Color','w')
-            plot(S.l.feeder(1) + S.l.feeder_radius*cos(2*pi/40*(0:40)), ...
-                S.l.feeder(2) + S.l.feeder_radius*sin(2*pi/40*(0:40)), 'Color', 'k')
+
+
+            %plot(S.a.position(1)-S.a.move_direction(1), S.a.position(2)-S.a.move_direction(2),...
+            %    '.','Color','w')
+
+            set(S.r_ant,'XData',S.a.position(1));
+            set(S.r_ant,'YData',S.a.position(2));
+            set(S.r_ant_view, 'XData', S.a.position(1) + S.a.view_radius*cos(2*pi/20*(0:20)));
+            set(S.r_ant_view, 'YData', S.a.position(2) + S.a.view_radius*sin(2*pi/20*(0:20)));
+            
+            drawnow
             % Global Vector plotten?
             % pause(0.01)
         end % render
