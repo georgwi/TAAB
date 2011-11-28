@@ -31,19 +31,27 @@ classdef simulation < handle
         end
         %% Run
         % Runs simulation for specified amount of iterations
-        function run(S, iterations)
-            S.init_render();        
-            %figure(1)
-            %title('Durchlauf 1, No Food');
-
-            while(S.a.has_food == 0)
+        function init(S)
+            S.init_render();
+        end
+        function reset(S)
+            S.a.has_food = 0;
+            S.a.nest = 0;
+            S.a.obstacle_vector = zeros(100, 100, 2);
+        end
+        function run(S, render)
+            S.reset();
+            while S.a.has_food == 0
                 S.a.findFood(S.l);
-               % S.render()
+                if render 
+                    S.render()
+                end
             end
-            i = 1;
-            while i <= iterations && S.a.nest ~= 1
+            while S.a.nest == 0
                 S.a.returnToNest(S.l)
-                S.render()
+                if render
+                    S.render()
+                end
             end % while ant is not at nest.
         end % run
         function init_render(S)
@@ -56,9 +64,7 @@ classdef simulation < handle
             plot(S.l.feeder(1), S.l.feeder(2), 'x', 'Color', 'k');
             
             plot(S.l.landmarks(:,1), S.l.landmarks(:,2), 'o', 'Color', 'b');
-            for i=1:length(S.l.landmarks)
-                line([S.l.landmarks(i,1), S.l.landmarks(i,1) + S.a.local_vectors(i,1)], [S.l.landmarks(i,2) S.l.landmarks(i,2) + S.a.local_vectors(i,1)]);
-            end
+            
             S.r_ant = plot(S.a.position(1), S.a.position(2),'.','Color','b');
             S.r_ant_view = plot(S.a.position(1) + S.a.view_radius*cos(2*pi/8*(0:8)), ...
                 S.a.position(2) + S.a.view_radius*sin(2*pi/8*(0:8)), 'Color', 'k');
@@ -72,9 +78,6 @@ classdef simulation < handle
 
             %plot(S.a.position(1)-S.a.move_direction(1), S.a.position(2)-S.a.move_direction(2),...
             %    '.','Color','w')
-            for i=1:length(S.l.landmarks)
-                line([S.l.landmarks(i,1), S.l.landmarks(i,1) + S.a.local_vectors(i,1)], [S.l.landmarks(i,2) S.l.landmarks(i,2) + S.a.local_vectors(i,1)]);
-            end
             set(S.r_ant,'XData',S.a.position(1));
             set(S.r_ant,'YData',S.a.position(2));
             set(S.r_ant_view, 'XData', S.a.position(1) + S.a.view_radius*cos(2*pi/20*(0:20)));
@@ -84,5 +87,12 @@ classdef simulation < handle
             % Global Vector plotten?
             % pause(0.01)
         end % render
+        
+        function render_local_vectors(S)
+            S.init_render();            
+            for i=1:length(S.l.landmarks)
+                line([S.l.landmarks(i,1)  S.l.landmarks(i,1) + S.a.local_vectors(i,1)], [S.l.landmarks(i,2) S.l.landmarks(i,2) + S.a.local_vectors(i,2)]);
+            end
+        end
     end
 end

@@ -38,4 +38,5 @@ s.a.position = s.l.nest;
 
 s.a.createGlobalVector(s.l);
 s.a.createLocalVectors(s.l.landmarks);
-s.run(runduration);
+s.init();
+s.run(0);

@@ -26,8 +26,9 @@ classdef ant < handle
         obstacle_vector
         rotation
         view_radius = 20;
-        local_vectors;
-        last_global_vector = [0 0];
+        local_vectors
+        updated_local_vectors
+        last_global_vector = [0 0]
     end
     methods (Access = private)
     	% creates the move_radius matrix
@@ -48,9 +49,10 @@ classdef ant < handle
         %% Function to update local vectors on seeable landmarks (only when returning)
         function update_lv(A, landmarks)
         	for i = 1:length(landmarks)
-                if norm(landmarks(i,:) - A.position) < A.view_radius
+                if norm(landmarks(i,:) - A.position) < A.view_radius && ~A.updated_local_vectors(i)
         			A.local_vectors(i,:) = A.last_global_vector - A.global_vector;
                     A.last_global_vector = A.global_vector;
+                    A.updated_local_vectors(i) = true;
         		end
         	end
         end
@@ -92,6 +94,7 @@ classdef ant < handle
         % no ant predeterminately knows all landmarks on map
         function createLocalVectors(A, landmarks)
             A.local_vectors = zeros(length(landmarks), 2);
+            A.updated_local_vectors = zeros(length(landmarks), 1);
         end
         %% findFood
         % Moves ant randomly in landscape to find the feeder
@@ -107,7 +110,7 @@ classdef ant < handle
                 disp('found food');
                 return
             end
-            dir = A.calc_lv_direction(L.landmarks);
+            dir = A.calc_lv_direction(L.landmarks)
             if dir(1) == 0 && dir(2) == 0
                 dir = A.move_radius(randi(length(A.move_radius)),:);
                 while dir * A.move_direction' <= 0
@@ -122,6 +125,10 @@ classdef ant < handle
             A.move_direction = dir;
             A.move(L, dir);
             A.has_food = 0;
+        end
+        
+        function init_returnToNest(A, landmarks)
+           A.update_local_vectors = zeros(length(landmarks), 1);
         end
         
         %% returnToNest
