@@ -27,6 +27,8 @@ classdef ant < handle
         obstacle_vector
         rotation
         view_radius = 20;
+        error_prob = 0.3;
+        step_counter
     end
     methods (Access = private)
     	% creates the move_radius matrix
@@ -99,6 +101,7 @@ classdef ant < handle
             if A.position(1) == L.feeder(1) && A.position(2) == L.feeder(2)
                 A.has_food = 1;
                 disp('found food');
+                A.step_counter = 0;
                 return
             end
             dir = A.move_radius(randi(length(A.move_radius)),:);
@@ -124,9 +127,11 @@ classdef ant < handle
             if A.global_vector == 0
                 A.nest = 1;
                 disp('reached nest')
+                disp(A.step_counter)
+                disp('steps needed for return')
                 return
             end
-            
+            A.step_counter = A.step_counter + 1;
             A.move(L, A.global_vector);
             
         end
@@ -145,10 +150,16 @@ classdef ant < handle
             while move_vector(1) == 0 && move_vector(2) == 0
                 move_vector = A.move_radius(randi([1,8]));
             end
+            
+            % The direction of the ant is given a certain random-error:
+            if rand < A.error_prob
+                move_vector(1) = move_vector(1) + 2*(rand-0.5)/3 * move_vector(1);
+                move_vector(2) = move_vector(2) + 2*(rand-0.5)/3 * move_vector(2);
+            end
 
             
             % Maindirection and seconddirection are calculated from the
-            % direction given by the global veor. The seconddirection gets a
+            % direction given by the input vecor. The seconddirection gets a
             % Probability smaller than 0.5 based on the angle between
             % maindirection and global vector.
             maindir = round(...
@@ -180,6 +191,7 @@ classdef ant < handle
                 temp = secdir;
             end
             
+            
             % If there is no obstacle near the ant the rotation-direction
             % can change.
             count = 0;
@@ -192,6 +204,7 @@ classdef ant < handle
             
             phi = pi/4;
             rot = [cos(phi), A.rotation*sin(phi); -A.rotation*sin(phi), cos(phi)];
+            
 
             % Obstacle-Avoiding: New maindirection until possible move is found!
             % 180deg-Turn-Avoiding: New maindirection if ant tries to turn around
@@ -202,10 +215,10 @@ classdef ant < handle
                 % and endless iterations.
                 A.obstacle_vector(A.position(1) + temp(1), A.position(2) + temp(2), 1) = ...
                     A.obstacle_vector(A.position(1) + temp(1), A.position(2) + temp(2), 1) ...
-                    - 5*temp(1);
+                    + 15*temp(1);
                 A.obstacle_vector(A.position(1) + temp(1), A.position(2) + temp(2), 2) = ...
                     A.obstacle_vector(A.position(1) + temp(1), A.position(2) + temp(2), 2) ...
-                    - 5*temp(2);
+                    + 15*temp(2);
                 
                 % The ant "turns" in direction of secdir. New secdir is old
                 % maindirection rotated over old secdir. (mirror)

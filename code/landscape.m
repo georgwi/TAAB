@@ -58,11 +58,10 @@ classdef landscape < handle
         
         function load_image(L, image, type) 
             img = imread(image, type);
-            img(:,:,1)
             L.size = length(img(:,:,1));
             L.plant = ~img(:,:,1);                        % use hex #ffffff
             [y, x] = find(img(:,:,2) == 153);
-            L.landmarks = [x, y]
+            L.landmarks = [x, y];
             [y, x] = find(img(:,:,2) == 238, 1, 'first'); % use hex #1100ee
             L.nest = [x, y];
             [y, x] = find(img(:,:,3) == 238, 1, 'first'); % use hex #11ee00
