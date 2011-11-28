@@ -37,4 +37,5 @@ s.l.load_image('test', 'png')
 s.a.position = s.l.nest;
 
 s.a.createGlobalVector(s.l);
+s.a.createLocalVectors(s.l.landmarks);
 s.run(runduration);
