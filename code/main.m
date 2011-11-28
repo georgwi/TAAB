@@ -24,17 +24,18 @@ addpath('Maps');
 % noch erstellen.
 
 %% Option2 random Map
-mapsize = 100;
-s = simulation(mapsize);
-s.l.generateLandscape(50, 50, 0.8);
-s.a.position = [5 5];
-s.l.nest = [5 5];
-s.l.feeder_radius = 50;
+%mapsize = 100;
+%s = simulation(mapsize);
+%s.l.generateLandscape(50, 50, 0.8);
+%s.a.position = [5 5];
+%s.l.nest = [5 5];
+%s.l.feeder_radius = 50;
 
 s = simulation(100);
 
-%s.l.load_image('test', 'png')
-%s.a.position = s.l.nest;
+s.l.load_image('test', 'png')
+s.a.position = s.l.nest;
 
 s.a.createGlobalVector(s.l);
+s.a.createLocalVectors(s.l.landmarks);
 s.run(runduration);
