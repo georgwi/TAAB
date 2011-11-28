@@ -21,5 +21,5 @@ s.l.load_map(plant);
 s.l.nest = neststart;
 s.l.feeder = feederstart;
 s.a.position = s.l.nest;
-s.l.setFeederRadius(50);
+s.l.setFeederRadius(90);
 
