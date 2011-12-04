@@ -26,10 +26,13 @@ classdef ant < handle
         obstacle_vector
         rotation
         view_radius = 20;
+<<<<<<< HEAD
         error_prob = 0.3;
         step_counter
+=======
         local_vectors;
         last_global_vector = [0 0];
+>>>>>>> ad0b8aa4769819042994a7e6e32bec42f8a0bef9
     end
     methods (Access = private)
     	% creates the move_radius matrix
@@ -110,7 +113,6 @@ classdef ant < handle
                 A.step_counter = 0;
                 return
             end
-            
             dir = A.calc_lv_direction(L.landmarks);
             if dir(1) == 0 && dir(2) == 0
                 dir = A.move_radius(randi(length(A.move_radius)),:);
@@ -142,8 +144,11 @@ classdef ant < handle
                 disp('steps needed for return')
                 return
             end
+<<<<<<< HEAD
             A.step_counter = A.step_counter + 1;
+=======
             A.update_lv(L.landmarks);
+>>>>>>> ad0b8aa4769819042994a7e6e32bec42f8a0bef9
             A.move(L, A.global_vector);
             
         end
@@ -221,21 +226,26 @@ classdef ant < handle
             % Obstacle-Avoiding: New maindirection until possible move is found!
             % 180deg-Turn-Avoiding: New maindirection if ant tries to turn around
             while L.plant(A.position(2) + temp(2), A.position(1) + temp(1)) ~= 0 ...
-                    || (temp(1) == -A.move_direction(1) && temp(2) == -A.move_direction(2) )
+                    || ( temp(1) == -A.move_direction(1) && temp(2) == -A.move_direction(2) )
                 
                 % A obstacle_vector is created and helps the ant to avoid the wall
                 % and endless iterations.
-                if abs(A.obstacle_vector(A.position(1) + temp(1), A.position(2) + temp(2), 1)) < 60
-                    A.obstacle_vector(A.position(1) + temp(1), A.position(2) + temp(2), 1) = ...
-                        A.obstacle_vector(A.position(1) + temp(1), A.position(2) + temp(2), 1) ...
-                        + 10*temp(1);
-                end
-                if abs(A.obstacle_vector(A.position(1) + temp(1), A.position(2) + temp(2), 2)) < 60
-                    A.obstacle_vector(A.position(1) + temp(1), A.position(2) + temp(2), 2) = ...
-                        A.obstacle_vector(A.position(1) + temp(1), A.position(2) + temp(2), 2) ...
-                        + 10*temp(2);
-                end
-                % The ant "turns" around 45deg.
+                A.obstacle_vector(A.position(1) + temp(1), A.position(2) + temp(2), 1) = ...
+                    A.obstacle_vector(A.position(1) + temp(1), A.position(2) + temp(2), 1) ...
+<<<<<<< HEAD
+                    + 15*temp(1);
+                A.obstacle_vector(A.position(1) + temp(1), A.position(2) + temp(2), 2) = ...
+                    A.obstacle_vector(A.position(1) + temp(1), A.position(2) + temp(2), 2) ...
+                    + 15*temp(2);
+=======
+                    + 10*temp(1);
+                A.obstacle_vector(A.position(1) + temp(1), A.position(2) + temp(2), 2) = ...
+                    A.obstacle_vector(A.position(1) + temp(1), A.position(2) + temp(2), 2) ...
+                    + 10*temp(2);
+>>>>>>> ad0b8aa4769819042994a7e6e32bec42f8a0bef9
+                
+                % The ant "turns" in direction of secdir. New secdir is old
+                % maindirection rotated over old secdir. (mirror)
                 % rot rotates
                 
                 temp = round(temp * rot);
