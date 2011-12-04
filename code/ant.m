@@ -28,7 +28,8 @@ classdef ant < handle
         view_radius = 20;
         error_prob = 0.3;
         step_counter
-        local_vectors;
+        local_vectors
+        updated_local_vectors
         last_global_vector = [0 0];
     end
     methods (Access = private)
@@ -50,10 +51,11 @@ classdef ant < handle
         %% Function to update local vectors on seeable landmarks (only when returning)
         function update_lv(A, landmarks)
         	for i = 1:length(landmarks)
-                if norm(landmarks(i,:) - A.position) < A.view_radius
-        			A.local_vectors(i,:) = A.last_global_vector - A.global_vector;
-                    A.last_global_vector = A.global_vector;
-        		end
+                if norm(landmarks(i,:) - A.position) < A.view_radius && ~A.updated_local_vectors(i)
+        			A.local_vectors(i,:) = - landmarks(i,:) + A.last_global_vector;
+                    A.last_global_vector = landmarks(i,:);
+                    A.updated_local_vectors(i) = true;
+                end
         	end
         end
         %% Function to calculate a second direction from given local vectors
@@ -94,6 +96,7 @@ classdef ant < handle
         % no ant predeterminately knows all landmarks on map
         function createLocalVectors(A, landmarks)
             A.local_vectors = zeros(length(landmarks), 2);
+            A.updated_local_vectors = zeros(length(landmarks), 1);
         end
         %% findFood
         % Moves ant randomly in landscape to find the feeder
@@ -105,9 +108,10 @@ classdef ant < handle
         function findFood(A, L)
             if A.position(1) == L.feeder(1) && A.position(2) == L.feeder(2)
                 A.has_food = 1;
-                A.last_global_vector = A.global_vector;
+                A.last_global_vector = L.feeder;
                 disp('found food');
                 A.step_counter = 0;
+                A.update_lv(L.landmarks)
                 return
             end
             
@@ -128,6 +132,7 @@ classdef ant < handle
             A.has_food = 0;
         end
         
+        
         %% returnToNest
         % Ant returns to nest after she found food
         % Tries to go the mist direct way with global_vector
@@ -137,6 +142,7 @@ classdef ant < handle
              % if the ant reached the nest no move is needed.
             if A.global_vector == 0
                 A.nest = 1;
+                
                 disp('reached nest')
                 disp(A.step_counter)
                 disp('steps needed for return')
@@ -144,7 +150,8 @@ classdef ant < handle
             end
             A.step_counter = A.step_counter + 1;
             A.update_lv(L.landmarks);
-            A.move(L, A.global_vector);
+            dir = A.global_vector;
+            A.move(L, dir);
             
         end
         

@@ -31,11 +31,14 @@ addpath('Maps');
 
 %% Option3 image Map
 s = simulation(100);
-s.l.load_image('test', 'png')
+s.l.load_image('map2', 'png')
 s.a.position = s.l.feeder;
 
-
-
+s.l.landmarks = [s.l.landmarks; s.l.nest];
 s.a.createGlobalVector(s.l);
 s.a.createLocalVectors(s.l.landmarks);
-s.run(runduration);
+s.init();
+for i = 1:5
+    s.run(1);
+    s.render_local_vectors
+end

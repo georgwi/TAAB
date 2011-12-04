@@ -15,7 +15,6 @@ classdef simulation < handle
         a;
         r_ant
         r_ant_view
-        results
     end
     methods (Access = public)
     	%% Initialization
@@ -39,15 +38,18 @@ classdef simulation < handle
             S.a.has_food = 0;
             S.a.nest = 0;
             S.a.obstacle_vector = zeros(100, 100, 2);
-            S.a.updated_local_vectors(S.a.updated_local_vectors ~= 0) = 0;
         end
         function run(S, render)
             S.reset();
             while S.a.has_food == 0
                 S.a.findFood(S.l);
+<<<<<<< HEAD
+                S.render()
+=======
                 if render 
                     S.render()
                 end
+>>>>>>> a9a837f54c48a9ff6abb33f5062abdefe69dd701
             end
             while S.a.nest == 0
                 S.a.returnToNest(S.l)
@@ -65,10 +67,15 @@ classdef simulation < handle
             plot(S.l.nest(1), S.l.nest(2),'o','Color','k')
             plot(S.l.feeder(1), S.l.feeder(2), 'x', 'Color', 'k');
             
+<<<<<<< HEAD
             if ~isempty(S.l.landmarks)
                 plot(S.l.landmarks(:,1), S.l.landmarks(:,2), 'o', 'Color', 'b');
             end
 
+=======
+            plot(S.l.landmarks(:,1), S.l.landmarks(:,2), 'o', 'Color', 'b');
+            
+>>>>>>> a9a837f54c48a9ff6abb33f5062abdefe69dd701
             S.r_ant = plot(S.a.position(1), S.a.position(2),'.','Color','b');
             S.r_ant_view = plot(S.a.position(1) + S.a.view_radius*cos(2*pi/8*(0:8)), ...
                 S.a.position(2) + S.a.view_radius*sin(2*pi/8*(0:8)), 'Color', 'k');
@@ -95,8 +102,7 @@ classdef simulation < handle
         function render_local_vectors(S)
             S.init_render();            
             for i=1:length(S.l.landmarks)
-                %line([S.l.landmarks(i,1)  S.l.landmarks(i,1) + S.a.local_vectors(i,1)], [S.l.landmarks(i,2) S.l.landmarks(i,2) + S.a.local_vectors(i,2)]);
-                quiver(S.l.landmarks(i,1), S.l.landmarks(i,2), S.a.local_vectors(i,1), S.a.local_vectors(i,2),'y')
+                line([S.l.landmarks(i,1)  S.l.landmarks(i,1) + S.a.local_vectors(i,1)], [S.l.landmarks(i,2) S.l.landmarks(i,2) + S.a.local_vectors(i,2)]);
             end
         end
     end
