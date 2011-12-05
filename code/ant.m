@@ -25,7 +25,7 @@ classdef ant < handle
         nest
         obstacle_vector
         rotation
-        view_radius = 15;
+        view_radius = 20;
         error_prob = 0;
         step_counter = 0;
         local_vectors
@@ -64,8 +64,9 @@ classdef ant < handle
         function temp = calc_lv_direction(A, landmarks)
             temp = [0 0];
         	for i=1:length(landmarks)
-                if norm(landmarks(i,:) - A.position) < A.view_radius
-                    temp = temp + A.local_vectors(i,:);
+                if norm(landmarks(i,:) - A.position) < A.view_radius && ...
+                        sum(A.local_vectors(i,:)) ~= 0
+                    temp = temp + A.local_vectors(i,:) + landmarks(i,:) - A.position;
                 end
             end
         end
