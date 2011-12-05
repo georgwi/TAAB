@@ -126,7 +126,7 @@ classdef ant < handle
             % If there is no local_vector in sight the ant moves based on
             % its previous direction with a slight probability to trun 45
             % degree
-            if dir(1) == 0 && dir(2) == 0
+            if sum(dir == 0)
                 dir = A.move_direction;
                 if rand < 0.3
                     phi = pi/4;
@@ -164,8 +164,13 @@ classdef ant < handle
             end
             A.step_counter = A.step_counter + 1;
             A.update_lv(L.landmarks);
-
+            
+            % if there are local_vectors and the ant can not see the nest yet 
+            % the ant considers them for the way home too:
             dir = A.global_vector;
+            if norm(A.position - L.nest) > A.view_radius
+                dir = dir - 0.3 * A.calc_lv_direction(L.landmarks);
+            end
             A.move(L, dir);
             
         end

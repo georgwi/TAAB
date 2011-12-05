@@ -39,7 +39,7 @@ s.a.createGlobalVector(s.l);
 s.a.createLocalVectors(s.l.landmarks);
 s.init();
 for i = 1:10
-    s.run(0);
+    s.run(1);
 end
 
 
