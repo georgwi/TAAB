@@ -41,7 +41,7 @@ s.a.createLocalVectors(s.l.landmarks);
 s.init(render);
 for i = 1:runduration
     s.run(render);
-    %i
+    i
 end
 
 

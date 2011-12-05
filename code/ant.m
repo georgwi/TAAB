@@ -54,7 +54,7 @@ classdef ant < handle
         function update_lv(A, landmarks)
         	for i = 1:length(landmarks)
                 if norm(landmarks(i,:) - A.position) < A.view_radius && ~A.updated_local_vectors(i)
-                    a = exp(-norm(A.local_vectors(i,:))/35);
+                    a = exp(-norm(A.local_vectors(i,:))/10);
         			A.local_vectors(i,:) = round(...
                         A.local_vectors(i,:) + 0.5*a* (- landmarks(i,:) + A.last_global_vector)...
                     );

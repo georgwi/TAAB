@@ -1,3 +1,6 @@
-for i = 1:20
+clc
+close all
+
+for i = 1:5
     main
 end
