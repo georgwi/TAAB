@@ -26,7 +26,7 @@ classdef ant < handle
         obstacle_vector
         rotation
         view_radius = 20;
-        error_prob = 0;
+        error_prob = 0.3;
         step_counter = 0;
         local_vectors
         updated_local_vectors
@@ -54,7 +54,10 @@ classdef ant < handle
         function update_lv(A, landmarks)
         	for i = 1:length(landmarks)
                 if norm(landmarks(i,:) - A.position) < A.view_radius && ~A.updated_local_vectors(i)
-        			A.local_vectors(i,:) = - landmarks(i,:) + A.last_global_vector;
+                    a = exp(-norm(A.local_vectors(i,:))/35);
+        			A.local_vectors(i,:) = round(...
+                        A.local_vectors(i,:) + 0.5*a* (- landmarks(i,:) + A.last_global_vector)...
+                    );
                     A.last_global_vector = landmarks(i,:);
                     A.updated_local_vectors(i) = true;
                 end
@@ -65,8 +68,20 @@ classdef ant < handle
             temp = [0 0];
         	for i=1:length(landmarks)
                 if norm(landmarks(i,:) - A.position) < A.view_radius && ...
-                        sum(A.local_vectors(i,:)) ~= 0
+                        sum(A.local_vectors(i,:)) ~= 0 && ...
+                        A.updated_local_vectors(i) == 0
+                    
+                    if sum(abs(A.local_vectors(i,:) + landmarks(i,:) - A.position)) == 0
+                        A.updated_local_vectors(i) = true;
+                    end
+                    
+                    
                     temp = temp + A.local_vectors(i,:) + landmarks(i,:) - A.position;
+                    
+                    if sum(abs(temp)) == 0
+                        A.updated_local_vectors(i) = true;
+                    end
+                   
                 end
             end
         end
@@ -112,11 +127,12 @@ classdef ant < handle
             if A.position(1) == L.feeder(1) && A.position(2) == L.feeder(2)
                 A.has_food = 1;
                 A.last_global_vector = L.feeder;
-                disp('found food');
+                %disp('found food');
                 A.results_food_finding = [A.results_food_finding, A.step_counter];
                 A.step_counter = 0;
                 A.update_lv(L.landmarks)
                 A.move_direction = -A.move_direction;
+                A.updated_local_vectors(A.updated_local_vectors ~= 0) = 0;
                 return
             end
             A.step_counter = A.step_counter + 1;
@@ -128,7 +144,7 @@ classdef ant < handle
             % degree
             if sum(dir == 0)
                 dir = A.move_direction;
-                if rand < 0.3
+                if rand < 0.1
                     phi = pi/4;
                     n = sign(rand-0.5);
                     err_rotation = [cos(phi), n*sin(phi); -n*sin(phi), cos(phi)];
@@ -157,9 +173,10 @@ classdef ant < handle
             if A.global_vector == 0
                 A.nest = 1;
                 
-                disp('reached nest')
+                %disp('reached nest')
                 A.results_nest_finding = [A.results_nest_finding, A.step_counter];
                 A.step_counter = 0;
+                A.updated_local_vectors(A.updated_local_vectors ~= 0) = 0;
                 return
             end
             A.step_counter = A.step_counter + 1;
@@ -169,7 +186,7 @@ classdef ant < handle
             % the ant considers them for the way home too:
             dir = A.global_vector;
             if norm(A.position - L.nest) > A.view_radius
-                dir = dir - 0.3 * A.calc_lv_direction(L.landmarks);
+                %dir = dir - 0.2 * A.calc_lv_direction(L.landmarks);
             end
             A.move(L, dir);
             
@@ -252,12 +269,12 @@ classdef ant < handle
                 
                 % A obstacle_vector is created and helps the ant to avoid the wall
                 % and endless iterations.
-                if abs(A.obstacle_vector(A.position(1) + temp(1), A.position(2) + temp(2), 1)) < 60
+                if abs(A.obstacle_vector(A.position(1) + temp(1), A.position(2) + temp(2), 1)) < 40
                     A.obstacle_vector(A.position(1) + temp(1), A.position(2) + temp(2), 1) = ...
                         A.obstacle_vector(A.position(1) + temp(1), A.position(2) + temp(2), 1) ...
                         + 10*temp(1);
                 end
-                if abs(A.obstacle_vector(A.position(1) + temp(1), A.position(2) + temp(2), 2)) < 60
+                if abs(A.obstacle_vector(A.position(1) + temp(1), A.position(2) + temp(2), 2)) < 40
                     A.obstacle_vector(A.position(1) + temp(1), A.position(2) + temp(2), 2) = ...
                         A.obstacle_vector(A.position(1) + temp(1), A.position(2) + temp(2), 2) ...
                         + 10*temp(2);

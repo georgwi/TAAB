@@ -35,8 +35,10 @@ classdef simulation < handle
         %% Run
         
         % Initiates all needet veriables
-        function init(S)
-            S.init_render();
+        function init(S,render)
+            if render
+                S.init_render();
+            end
         end
         
         % After a sucessfull run some variables need to be reset
@@ -44,7 +46,6 @@ classdef simulation < handle
             S.a.has_food = 0;
             S.a.nest = 0;
             S.a.obstacle_vector = zeros(100, 100, 2);
-            S.a.updated_local_vectors(S.a.updated_local_vectors ~= 0) = 0;
         end
         
         % The simulation

@@ -6,10 +6,11 @@
 
 clc;
 clear all; 
-clf;
-close all;
+%clf;
+%close all;
 
-runduration = 100; 	% Duration of simulation
+runduration = 15; 	% Duration of simulation
+render = false;
 
 addpath('Maps');
 
@@ -37,14 +38,19 @@ s.a.position = s.l.nest;
 s.l.landmarks = [s.l.landmarks; s.l.nest];
 s.a.createGlobalVector(s.l);
 s.a.createLocalVectors(s.l.landmarks);
-s.init();
-for i = 1:10
-    s.run(1);
+s.init(render);
+for i = 1:runduration
+    s.run(render);
+    %i
 end
 
 
 %% Results
-disp('Steps needed for finding food')
-disp(s.a.results_food_finding)
-disp('Steps needed for returning to the nest')
-disp(s.a.results_nest_finding)
+
+figure(2)
+plot(s.a.results_food_finding,'r')
+hold on
+plot(s.a.results_nest_finding,'g')
+legend('food-searching','nest-searching')
+xlabel('number of runs')
+ylabel('steps needed / time needed')
