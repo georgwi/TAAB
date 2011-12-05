@@ -32,7 +32,7 @@ addpath('Maps');
 %% Option3 image Map
 s = simulation(100);
 s.l.load_image('map2', 'png')
-s.a.position = s.l.feeder;
+s.a.position = s.l.nest;
 
 s.l.landmarks = [s.l.landmarks; s.l.nest];
 s.a.createGlobalVector(s.l);
@@ -40,5 +40,11 @@ s.a.createLocalVectors(s.l.landmarks);
 s.init();
 for i = 1:5
     s.run(1);
-    s.render_local_vectors
 end
+
+
+%% Results
+disp('Steps needed for finding food')
+disp(s.a.results_food_finding)
+disp('Steps needed for returning to the nest')
+disp(s.a.results_nest_finding)

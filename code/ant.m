@@ -25,12 +25,14 @@ classdef ant < handle
         nest
         obstacle_vector
         rotation
-        view_radius = 20;
-        error_prob = 0.3;
-        step_counter
+        view_radius = 15;
+        error_prob = 0;
+        step_counter = 0;
         local_vectors
         updated_local_vectors
         last_global_vector = [0 0];
+        results_food_finding
+        results_nest_finding
     end
     methods (Access = private)
     	% creates the move_radius matrix
@@ -110,17 +112,28 @@ classdef ant < handle
                 A.has_food = 1;
                 A.last_global_vector = L.feeder;
                 disp('found food');
+                A.results_food_finding = [A.results_food_finding, A.step_counter];
                 A.step_counter = 0;
                 A.update_lv(L.landmarks)
+                A.move_direction = -A.move_direction;
                 return
             end
+            A.step_counter = A.step_counter + 1;
             
             dir = A.calc_lv_direction(L.landmarks);
+            
+            % If there is no local_vector in sight the ant moves based on
+            % its previous direction with a slight probability to trun 45
+            % degree
             if dir(1) == 0 && dir(2) == 0
-                dir = A.move_radius(randi(length(A.move_radius)),:);
-                while dir * A.move_direction' <= 0
-                    dir = A.move_radius(randi(length(A.move_radius)),:);
+                dir = A.move_direction;
+                if rand < 0.3
+                    phi = pi/4;
+                    n = sign(rand-0.5);
+                    err_rotation = [cos(phi), n*sin(phi); -n*sin(phi), cos(phi)];
+                    dir = round(dir * err_rotation);
                 end
+                
             end
             
             if norm(A.position - L.feeder) < A.view_radius
@@ -144,12 +157,13 @@ classdef ant < handle
                 A.nest = 1;
                 
                 disp('reached nest')
-                disp(A.step_counter)
-                disp('steps needed for return')
+                A.results_nest_finding = [A.results_nest_finding, A.step_counter];
+                A.step_counter = 0;
                 return
             end
             A.step_counter = A.step_counter + 1;
             A.update_lv(L.landmarks);
+
             dir = A.global_vector;
             A.move(L, dir);
             
@@ -172,8 +186,8 @@ classdef ant < handle
             
             % The direction of the ant is given a certain random-error:
             if rand < A.error_prob
-                move_vector(1) = move_vector(1) + 2*(rand-0.5)/3 * move_vector(1);
-                move_vector(2) = move_vector(2) + 2*(rand-0.5)/3 * move_vector(2);
+                move_vector(1) = move_vector(1) + (rand-0.5) * move_vector(1);
+                move_vector(2) = move_vector(2) + (rand-0.5) * move_vector(2);
             end
 
             
