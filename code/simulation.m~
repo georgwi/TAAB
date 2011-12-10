@@ -60,7 +60,7 @@ classdef simulation < handle
                     S.render(path_render)
                 end
             end
-            %return
+            return
             % Ant returns to nest similar until a.nest is true
             while S.a.nest == 0
                 S.a.returnToNest(S.l)

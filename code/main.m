@@ -6,11 +6,12 @@
 
 clc;
 clear all; 
-%clf;
-%close all;
+clf;
+close all;
 
-runduration = 15; 	% Duration of simulation
-render = false;
+runduration = 9; 	% Duration of simulation
+render = true;
+path_render = false;
 
 addpath('Maps');
 
@@ -18,7 +19,7 @@ addpath('Maps');
 % all saved Maps can be found in the code-folder/Maps
 
 % two Obstacles - Experiment 1
-% map1
+%map1
 
 
 %% Option2 random Map
@@ -34,13 +35,13 @@ addpath('Maps');
 s = simulation(100);
 s.l.load_image('map2', 'png')
 s.a.position = s.l.nest;
-
 s.l.landmarks = [s.l.landmarks; s.l.nest];
+
 s.a.createGlobalVector(s.l);
 s.a.createLocalVectors(s.l.landmarks);
 s.init(render);
 for i = 1:runduration
-    s.run(render);
+    s.run(render,path_render);
     i
 end
 

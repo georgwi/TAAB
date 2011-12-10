@@ -53,8 +53,7 @@ classdef ant < handle
         %% Function to update local vectors on seeable landmarks (only when returning)
         function update_lv(A, landmarks)
         	for i = 1:length(landmarks)
-                if norm(landmarks(i,:) - A.position) < A.view_radius && ~A.updated_local_vectors(i) && ...
-                        A.last_global_vector(1) ~= landmarks(end,1) && A.last_global_vector(2) ~= landmarks(end,2)
+                if norm(landmarks(i,:) - A.position) < A.view_radius && ~A.updated_local_vectors(i)
                     a = exp(-norm(A.local_vectors(i,:))/10);
         			A.local_vectors(i,:) = round(...
                         A.local_vectors(i,:) + 0.5*a* (- landmarks(i,:) + A.last_global_vector)...
