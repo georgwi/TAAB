@@ -12,14 +12,13 @@ n = 100;
     plant(posy(2):posy(4),posx(3)) = ones;
     
 neststart = [posx(1),posy(3)];
-antstart = neststart;
 feederstart = [posx(4), posy(3)];
+antstart = feederstart;
 
 mapsize = length(plant);
-s = simulation(mapsize);
+s = simulation(mapsize, true, true);
 s.l.load_map(plant);
 s.l.nest = neststart;
 s.l.feeder = feederstart;
-s.a.position = s.l.nest;
-s.l.setFeederRadius(90);
+s.a.position = s.l.feeder;
 

@@ -1,52 +1,65 @@
 %% Mainfile 
 % for common configurations of the simulation (mostly testing
-% purposes
-
-% clear everything
+% purposes and initiating)
 
 clc;
 clear all; 
 clf;
 close all;
+addpath('Maps');
 
-runduration = 9; 	% Duration of simulation
+
+%% Variables
+
+runduration = 5; 	% Duration of simulation
 render = true;
 path_render = false;
 
-addpath('Maps');
 
-%% Option1 saved Map
-% all saved Maps can be found in the code-folder/Maps
 
-% two Obstacles - Experiment 1
+%% Options for different map-loading methods
+% only one option should be enabled
+
+% 1. Map from m-file
+% ------------------------------------------------
 %map1
 
 
-%% Option2 random Map
-% mapsize = 100;
-% s = simulation(mapsize);
-% s.l.generateLandscape(30, 55, 0.2);
-% s.l.nest = [5 5];
-% s.a.position = s.l.nest;
-% s.l.feeder = [95 95];
-
-
-%% Option3 image Map
-s = simulation(100);
-s.l.load_image('map2', 'png')
+% 2. Random map from generator
+% Some values need to be set by the user:
+% ------------------------------------------------
+mapsize = 100;
+s = simulation(mapsize, render, path_render);
+s.l.generateLandscape(mapsize, 30, 55, 0.8);
+s.l.nest = [5 5];
 s.a.position = s.l.nest;
-s.l.landmarks = [s.l.landmarks; s.l.nest];
+s.l.feeder = [95 95];
+
+
+% 3. Map from image.png
+% ------------------------------------------------
+% s = simulation(100, render, path_render);
+% s.l.load_image('map2', 'png')
+% s.a.position = s.l.nest;
+% s.l.landmarks = [s.l.landmarks; s.l.nest];
+
+
+
+%% Run the simulation
 
 s.a.createGlobalVector(s.l);
 s.a.createLocalVectors(s.l.landmarks);
-s.init(render);
+
 for i = 1:runduration
-    s.run(render,path_render);
+    s.run();
     i
 end
 
+%aviobj = close(s.aviobj);
+% enable to create a movie (3/3)
 
-%% Results
+
+%% Plotting the results on steps
 
 figure(2)
 plot(s.a.results_food_finding,'r')
