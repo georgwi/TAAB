@@ -11,7 +11,7 @@ close all;
 
 runduration = 9; 	% Duration of simulation
 render = true;
-path_render = false;
+path_render = 1;
 
 addpath('Maps');
 
@@ -23,19 +23,19 @@ addpath('Maps');
 
 
 %% Option2 random Map
-% mapsize = 100;
-% s = simulation(mapsize);
-% s.l.generateLandscape(30, 55, 0.2);
-% s.l.nest = [5 5];
-% s.a.position = s.l.nest;
-% s.l.feeder = [95 95];
+ mapsize = 100;
+ s = simulation(mapsize);
+ s.l.generateLandscape(30, 88, 0.8);
+ s.l.nest = [5 5];
+ s.a.position = s.l.feeder;
+ s.l.feeder = [95 95];
 
 
 %% Option3 image Map
-s = simulation(100);
-s.l.load_image('map2', 'png')
-s.a.position = s.l.nest;
-s.l.landmarks = [s.l.landmarks; s.l.nest];
+% s = simulation(100);
+% s.l.load_image('map2', 'png')
+% s.a.position = s.l.nest;
+% s.l.landmarks = [s.l.landmarks; s.l.nest];
 
 s.a.createGlobalVector(s.l);
 s.a.createLocalVectors(s.l.landmarks);
