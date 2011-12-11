@@ -1,0 +1,79 @@
+
+\thispagestyle{empty}
+
+\begin{center}
+\includegraphics[width=5cm]{images/ETHlogo.eps}
+
+\bigskip
+
+
+\bigskip
+
+
+\bigskip
+
+
+\LARGE{ Lecture with Computer Exercises:\\ }
+\LARGE{ Modelling and Simulating Social Systems with MATLAB\\}
+
+\bigskip
+
+\bigskip
+
+\small{Project Report}\\
+
+\bigskip
+
+\bigskip
+
+\bigskip
+
+\bigskip
+
+
+\begin{tabular}{|c|}
+\hline
+\\
+\textbf{\LARGE{ Desert Ant Behaviour }}\\
+<<<<<<< .merge_file_OnPwua
+\textbf{\LARGE{ Modelling desert ants with }}\\
+\textbf{\LARGE{ a focus on movement and navigation }}\\
+=======
+\textbf{\LARGE{ Simulation of the navigation and movement}}\\
+\textbf{\LARGE{ of desert ants }}\\
+>>>>>>> .merge_file_Sm2TBb
+\\
+\hline
+\end{tabular}
+\bigskip
+
+\bigskip
+
+\bigskip
+
+\LARGE{Georg Wiedebach \& Wolf Vollprecht}
+
+
+
+\bigskip
+
+\bigskip
+
+\bigskip
+
+\bigskip
+
+\bigskip
+
+\bigskip
+
+\bigskip
+
+\bigskip
+
+Zurich\\
+December 2011\\
+
+\end{center}
+
+
