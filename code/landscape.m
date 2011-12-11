@@ -1,61 +1,75 @@
 %% Landscape class
 % A class for handling the landscape of a simulation
-%% Properties
-% * size: 
-%	int, size of quadratic landscape
-% * plant(size, size):
-%	int-array map of landscape
-% * feeder(1,1):
-%	int-array position of 
+
 
 classdef landscape < handle
     properties (SetAccess = public)
-        size;
-        landmarks;
-        plant;
-        feeder;
-        feeder_radius
-        nest;
+        size            % Sitze of quadratic Landcape
+        
+        plant           % Matrix storing free and taken points
+        landmarks       % Position of landmarks
+        feeder          % Position of Feeder
+        nest            % Position of Nest
     end
-    methods (Access = private)
-    end
+    
     methods (Access = public) 
     	%% Initialize Landscape 
-    	% size = n
         function L = landscape(N)
             L.size = N;
-            L.feeder = round([1/3*N 2/3*N]);
-            L.nest = round([2/3*N 1/3*N]);
-        end % init
-        
-        %% set Feeder Radius for better observability;
-        function setFeederRadius(L, r)
-            L.feeder_radius = r;
         end
         
-        %% Stump for external generateLandscape function
-        function generateLandscape(L, obstaclecount, obstaclesize, obstacleprobability)
-            L.plant = generateLandscape(L.size, obstaclecount, obstaclesize, obstacleprobability);
-        end
+        %% Gererate random Landcape
+        function generateLandscape(L, n, num, size, prob)
+            L.plant = zeros(n,n);
+            L.plant(1,:) = ones(1,n);
+            L.plant(n,:) = ones(1,n);
+            L.plant(:,1) = ones(1,n);
+            L.plant(:,n) = ones(1,n);
+            
+            % 1. Zufällige Hindernisse Plazieren Anzahl der Hindernisse soll fest sein:
+            posspeicher = zeros(num,1);
 
-        %% Function to set nest and feeder positions (not always required)
-        % Nest = nestposition, Feeder = feederposition
-        function setNestAndFeeder(Nest, Feeder)
-            L.nest = Nest;
-            L.feeder = Feeder;
+            for i = 1:num
+                pos = n+1;
+                % Finden eines geeigneten Ortes:
+                while L.plant(pos) || L.plant(pos-1) || L.plant(pos+1) || L.plant(pos-n) || L.plant(pos+n)
+                    pos = randi([n+1,n*n-(n+1)]);
+                end
+        
+                % Plazieren und speichern des Ortes für Schritt 2:
+                posspeicher(i) = pos;
+                L.plant(pos) = 1;
+            end
+
+            % 2. Vergrössern dieser Hindernisseauf eine bestimmte Grösse (Hindernisse
+            % wachsen über Ränder hinaus und auf der Anderen Spielfeldseite wieder
+            % hinein.
+            neigh = [-1 1 -n n];
+
+            for i = 1:num
+                dir = inf;
+                for j = 1:size
+                    % Manchmal wird eine Richtungsänderung zugelassen:
+                    if rand < prob
+                        dir = inf;
+                    end
+                    % Wählen einer zufälligen Richtung zum Vergrössern:
+                    while posspeicher(i) + dir < 1 || posspeicher(i) + dir > n*n
+                        dir = neigh(randi(4));
+                    end
+                    L.plant(posspeicher(i) + dir) = 1;
+                    posspeicher(i) = posspeicher(i) + dir;       
+                end
+            end
         end
         
-        %% Set Landmarks 
-        function setLandmarks(Landmarks)
-            L.landmarks = Landmarks;
-        end
-        
-        % Load a map with a specified plant and feeder/nest positions
+        %% Load a map (invoked from m-files)
         function load_map(L, P)
-            L.plant = P;	% Set plant
+            L.plant = P;
             L.size = length(P);
         end % load_map
         
+        %% Load a image-map
         function load_image(L, image, type) 
             img = imread(image, type);
             L.size = length(img(:,:,1));
@@ -73,6 +87,4 @@ classdef landscape < handle
         end
         
     end % methods
-    methods (Static)
-    end % Static functions
 end % classdef

@@ -1,60 +1,37 @@
 %% Simulation Class
 % Handles everything simulationwise e.g. run the simulation, define simulation wide parameters
-%% Variables
-% * l
-%	Landscape
-%	defines the Landscape of the simulation
-% * a TODO decide if should/could be an array or not (simulate more than one ant in a given simulation)
-%	Ant
-%	defines the ant of the simulation
 
 
 classdef simulation < handle
     properties (SetAccess = private)
-        l;
-        a;
-        r_ant
-        r_ant_view
+        l               % landscape
+        a               % ant
+        
+        r               % true or false
+        r_path          % true or false
+        r_init          % true or false
+        r_ant           % rendering
+        r_ant_view      % rendering
+        
+%        aviobj = avifile('antmovie.avi','compression','None');
+% enable to create a movie (1/3)
     end
-    methods (Access = public)
+    
+    methods (Access = public)    
     	%% Initialization
     	% Initalizes a simulation with landscape size N
-    	% Ant is at the moment placed in the center of the map
-        function S = simulation(N)
-            if(nargin == 0)
-                S.l = landscape(1);
-                S.a = ant(1);
-            else
-                S.l = landscape(N);
-                S.a = ant(N);
-            end
+        function S = simulation(N,r,r_path)
+            S.l = landscape(N);
+            S.a = ant();
+            S.r = r;
+            S.r_path = r_path;
+            S.r_init = true;
         end
-        %% Run
-        % Runs simulation for specified amount of iterations
-        function init(S)
-            S.init_render();
-        end
-        function reset(S)
-            S.a.has_food = 0;
-            S.a.nest = 0;
-            S.a.obstacle_vector = zeros(100, 100, 2);
-        end
-        function run(S, render)
-            S.reset();
-            while S.a.has_food == 0
-                S.a.findFood(S.l);
-                if render 
-                    S.render()
-                end
-            end
-            while S.a.nest == 0
-                S.a.returnToNest(S.l)
-                if render
-                    S.render()
-                end
-            end % while ant is not at nest.
-        end % run
+              
+        %% Initiates the rendering
         function init_render(S)
+            S.r_init = false;
+            
             figure(1)
             imagesc(S.l.plant)
             axis off, axis equal
@@ -63,36 +40,90 @@ classdef simulation < handle
             plot(S.l.nest(1), S.l.nest(2),'o','Color','k')
             plot(S.l.feeder(1), S.l.feeder(2), 'x', 'Color', 'k');
             
-            plot(S.l.landmarks(:,1), S.l.landmarks(:,2), 'o', 'Color', 'b');
+            % If landmarks exits they are plotted
+            if ~isempty(S.l.landmarks)
+                plot(S.l.landmarks(:,1), S.l.landmarks(:,2), 'o', 'Color', 'b');
+            end
             
+            % Initiates the Animation in "render"
             S.r_ant = plot(S.a.position(1), S.a.position(2),'.','Color','b');
-            S.r_ant_view = plot(S.a.position(1) + S.a.view_radius*cos(2*pi/8*(0:8)), ...
-                S.a.position(2) + S.a.view_radius*sin(2*pi/8*(0:8)), 'Color', 'k');
-            hold on
+            S.r_ant_view = plot(S.a.position(1) + S.a.detection_radius*cos(2*pi/20*(0:20)), ...
+                S.a.position(2) + S.a.detection_radius*sin(2*pi/20*(0:20)), 'Color', 'k');
         end
-        %% Render
-        % renders the simulation (plant & ant)
+        
+        %% Reset after complete run
+        function reset(S)
+            S.a.has_food = 0;
+            S.a.nest = 0;
+            S.a.obstacle_vector = zeros(100, 100, 2);
+            
+            % If render is true local vectors are plotted
+            if S.r
+                S.render_local_vectors;
+            end
+        end
+        
+        %% The simulation
+        % if render is true the ant will be plottet on the landscape
+        function run(S)
+            % On the first run and if render is true rendering is initiated
+            if S.r_init && S.r
+                S.init_render();
+            end
+            
+            % Some variables are reset bevore a new run
+            S.reset();
+            
+            % Ant searces for food until a.has_food is true
+            while S.a.has_food == 0
+                S.a.findFood(S.l);
+                
+                % If render is true
+                if S.r 
+                    S.render()
+                end
+            end
+            
+            % Ant returns to nest similar until a.nest is true
+            while S.a.nest == 0
+                S.a.returnToNest(S.l)
+                
+                % If render is true
+                if S.r
+                    S.render()
+                end
+            end
+
+        end
+        
+        %% Render the simulation
         function render(S)
             figure(1)
-
-
-            %plot(S.a.position(1)-S.a.move_direction(1), S.a.position(2)-S.a.move_direction(2),...
-            %    '.','Color','w')
+            
+            % Animation of ant and view-radius
             set(S.r_ant,'XData',S.a.position(1));
             set(S.r_ant,'YData',S.a.position(2));
-            set(S.r_ant_view, 'XData', S.a.position(1) + S.a.view_radius*cos(2*pi/20*(0:20)));
-            set(S.r_ant_view, 'YData', S.a.position(2) + S.a.view_radius*sin(2*pi/20*(0:20)));
-            
+            set(S.r_ant_view, 'XData', S.a.position(1) + S.a.detection_radius*cos(2*pi/20*(0:20)));
+            set(S.r_ant_view, 'YData', S.a.position(2) + S.a.detection_radius*sin(2*pi/20*(0:20)));
             drawnow
-            % Global Vector plotten?
-            % pause(0.01)
-        end % render
+            
+            % If path plotting is true
+            if S.r_path
+                plot(S.a.position(1), S.a.position(2),'.','Color','w')
+            end
+            
+%            F = getframe(1);
+%            S.aviobj = addframe(S.aviobj,F);
+% enable to create a movie (2/3)
+        end
         
+        %% Render local vectors
         function render_local_vectors(S)
             S.init_render();            
             for i=1:length(S.l.landmarks)
-                line([S.l.landmarks(i,1)  S.l.landmarks(i,1) + S.a.local_vectors(i,1)], [S.l.landmarks(i,2) S.l.landmarks(i,2) + S.a.local_vectors(i,2)]);
+                quiver(S.l.landmarks(i,1), S.l.landmarks(i,2), S.a.local_vectors(i,1), S.a.local_vectors(i,2),'y')
             end
         end
-    end
-end
+        
+    end % methods
+end % classdef

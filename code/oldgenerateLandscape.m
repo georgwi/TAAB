@@ -1,7 +1,4 @@
 function plant = generateLandscape(n, num, size, prob)
-    % num = 2;        % Anzahl der Hindernisse
-	% size = 15;      % Grösse der Hindernisse
-	% prob = 0.1;     % Wahrscheinlichkeit für "Verwindungen" und Knicke
 	
     plant = zeros(n,n);
 	plant(1,:) = ones(1,n);
@@ -9,9 +6,7 @@ function plant = generateLandscape(n, num, size, prob)
 	plant(:,1) = ones(1,n);
 	plant(:,n) = ones(1,n);
 
-
-
-	% 1. Zufällige Hindernisse Plazieren Anzahl der Hindernisse soll fest sein:
+	%% 1. Zufällige Hindernisse Plazieren Anzahl der Hindernisse soll fest sein:
 	posspeicher = zeros(num,1);
 
 	for i = 1:num
@@ -20,14 +15,14 @@ function plant = generateLandscape(n, num, size, prob)
 		while plant(pos) ...
 		        || plant(pos-1) || plant(pos+1) || plant(pos-n) || plant(pos+n)
 		    pos = randi([n+1,n*n-(n+1)]);
-		end
+        end
+        
 		% Plazieren und speichern des Ortes für Schritt 2:
 		posspeicher(i) = pos;
 		plant(pos) = 1;
 	end
 
-
-	% 2. Vergrössern dieser Hindernisseauf eine bestimmte Grösse (Hindernisse
+	%% 2. Vergrössern dieser Hindernisseauf eine bestimmte Grösse (Hindernisse
 	% wachsen über Ränder hinaus und auf der Anderen Spielfeldseite wieder
 	% hinein.
 	neigh = [-1 1 -n n];

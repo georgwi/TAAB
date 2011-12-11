@@ -1,152 +1,184 @@
 %% Ant class
 % This class defines the behaviour/movement of an ant in a given landscape
-%% Variables
-% * position 
-%	1x2 int matrix
-%	Position of ant in landscape
-% * move_radius
-%	nx2 int matrix
-%	Defines "move radius" (neighbor fields for ant)
-%	e.g. [-1 -1; -1 0; 0 -1; 0 1; 1 0; 1 1] ...
-% * landmarks (TODO not implemented yet)
-% 	nxn int matrix 
-%	Defines local landmark-vectors for ant, should have the 
-%	size of the landscape
-% * velocity
-%   Is a 1x2 vector defining the x-y-velocity of our ant
+
 
 classdef ant < handle
     properties (SetAccess = public)
-        position
-        move_radius = [1 1; 1 0; 0 1; 1 -1; -1 1; -1 0; 0 -1; -1 -1];
-        move_direction
-        global_vector
-        has_food
-        nest
-        obstacle_vector
-        rotation
-        view_radius = 20;
-        local_vectors
-        updated_local_vectors
-        last_global_vector = [0 0]
+        % Variables that may be set for testing:
+        detection_radius = 20;          % View radius of the ant
+        error_prob = 0.3;               % Error probability
+        turn_prob = 0.3;                % Random turns
+        
+        % general variables
+        position                        % Position of Ant
+        global_vector                   % Global vector
+        has_food                        % true or false
+        nest                            % true or false
+        
+        % move-related Veriables
+        move_direction                  % last move direction
+        obstacle_vector                 % Matrix stores found obstacles
+        rotation                        % Defines clockwise or counterclockwise turns
+        move_radius                     % Moore neighbourhood (1st) of the ant
+        local_vectors                   % stores local vectors
+        updated_local_vectors           % boolean array
+        last_local_vector               % stores the last landmark seen
+        
+        % result-storing
+        step_counter                    % for counting the steps to nest or feeder
+        results_food_finding            % results in steps
+        results_nest_finding            % results in steps
     end
+    
     methods (Access = private)
-    	% creates the move_radius matrix
-        function create_moveradius(A, movewidth)
-            k = 1;
-            n = round(movewidth/2);
-            for i=-n:n
-                for j=-n:n
-                    if i == 0 && j == 0
-                        break
-                    end
-                    A.move_radius(k,1) = i;
-                    A.move_radius(k,2) = j;
-                    k = k + 1;
-                end
-            end
-        end
-        %% Function to update local vectors on seeable landmarks (only when returning)
+        %% Function to update local vectors (only when returning)
         function update_lv(A, landmarks)
         	for i = 1:length(landmarks)
-                if norm(landmarks(i,:) - A.position) < A.view_radius && ~A.updated_local_vectors(i)
-        			A.local_vectors(i,:) = A.global_vector - A.last_global_vector;
-                    A.last_global_vector = A.global_vector;
+                if norm(landmarks(i,:) - A.position) < A.detection_radius && ...
+                        ~A.updated_local_vectors(i) && ...
+                        ~isequal(A.last_local_vector, landmarks(end,:))
+                    
+                    % "growth-factor" is calculated
+                    gfac = 0.5 * exp(-norm(A.local_vectors(i,:))/10);
+                    
+                    
+                    % Local vector is adjusted
+        			A.local_vectors(i,:) = round(A.local_vectors(i,:) + ...
+                        gfac * (- landmarks(i,:) + A.last_local_vector));
+                    
+                    % Storing information about update
+                    A.last_local_vector = landmarks(i,:);
                     A.updated_local_vectors(i) = true;
-        		end
+                end
         	end
         end
+        
         %% Function to calculate a second direction from given local vectors
         function temp = calc_lv_direction(A, landmarks)
             temp = [0 0];
         	for i=1:length(landmarks)
-                if norm(landmarks(i,:) - A.position) < A.view_radius
-                    temp = temp + A.local_vectors(i,:);
+                if norm(landmarks(i,:) - A.position) < A.detection_radius && ...
+                        ~isequal(A.local_vectors(i,:), [0 0]) && ...
+                        A.updated_local_vectors(i) == 0
+                    
+                    if isequal(A.local_vectors(i,:) + landmarks(i,:) - A.position, [0 0])
+                        A.updated_local_vectors(i) = true;
+                    end
+                    
+                    % all local vectors in the detection radius are summed up
+                    temp = temp + A.local_vectors(i,:) + landmarks(i,:) - A.position;
+                    
+                    if isequal(temp, [0 0])
+                        A.updated_local_vectors(i) = true;
+                    end
+                   
                 end
             end
-            disp(temp);
         end
     end % private methods
+    
     methods (Access = public)
     	%% Initalization of ant
-    	% x,y: starting positions
-    	% movewidth: size for created generated move_radius matrix
-        function A = ant(x,y,movewidth)
-            if nargin == 1              
-                A.position(1) = round(x/2);
-                A.position(2) = round(x/2);
-            elseif nargin > 1
-                A.position(1) = x;
-                A.position(2) = y;
-            end
+        function A = ant()
             A.rotation = -1;
             A.move_direction = [0 1];
-            A.nest = 0; % True or False
-            A.has_food = 0;
             A.obstacle_vector = zeros(100,100,2);
+            A.move_radius = [1 1; 1 0; 0 1; 1 -1; -1 1; -1 0; 0 -1; -1 -1];
+            A.step_counter = 0;
+            A.nest = 0;
+            A.has_food = 0;
         end
         
-        %% createGlobalVector from Landscape
+        %% Create the GlobalVector from Landscape
         function createGlobalVector(A, L)
             A.global_vector =  L.nest - A.position;
         end
-        %% init local vectors
-        % only for coding & plotting convenience
-        % no ant predeterminately knows all landmarks on map
+        
+        %% Initiate the local vectors
         function createLocalVectors(A, landmarks)
             A.local_vectors = zeros(length(landmarks), 2);
             A.updated_local_vectors = zeros(length(landmarks), 1);
         end
-        %% findFood
+        
+        %% FindFood
         % Moves ant randomly in landscape to find the feeder
-        % Ant should learn landscapes and path integrate the global
-        % vector 
-        % return true if found food
-        % return false if not
-        % calculate localvectors into move vector
+        % calculates movevector from localvectors
         function findFood(A, L)
-            if A.position(1) == L.feeder(1) && A.position(2) == L.feeder(2)
-                A.has_food = 1;
-                A.last_global_vector = A.global_vector;
-                disp('found food');
+            
+            % if the feeder is found:
+            if isequal(A.position, L.feeder)
+                A.has_food = true;
+                A.last_local_vector = L.feeder;
+                
+                % results are stored and the stepcounter is reset
+                A.results_food_finding = [A.results_food_finding, A.step_counter];
+                A.step_counter = 0;
+                
+                % some variables are reset or adjusted
+                A.update_lv(L.landmarks)
+                A.move_direction = -A.move_direction;
+                A.updated_local_vectors(A.updated_local_vectors ~= 0) = 0;
                 return
             end
-            dir = A.calc_lv_direction(L.landmarks)
-            if dir(1) == 0 && dir(2) == 0
-                dir = A.move_radius(randi(length(A.move_radius)),:);
-                while dir * A.move_direction' <= 0
-                    dir = A.move_radius(randi(length(A.move_radius)),:);
+            
+            % The Step-Counter is incremented
+            A.step_counter = A.step_counter + 1;
+            
+            % All local vectors in detection radius are considered
+            dir = A.calc_lv_direction(L.landmarks);
+            
+            % If there is no local_vector in sight the ant moves based on
+            % its previous direction with a probability to trun 45
+            % degree
+            if isequal(dir, [0 0])
+                dir = A.move_direction;
+                if rand < A.turn_prob
+                    phi = pi/4;
+                    n = sign(rand-0.5);
+                    err_rotation = [cos(phi), n*sin(phi); -n*sin(phi), cos(phi)];
+                    dir = round(dir * err_rotation);
                 end
             end
             
-            if norm(A.position - L.feeder) < A.view_radius
+            % If the ant can "see" the feeder all previous calcualations are
+            % overwriten and the move direction points directly towards
+            % the feeder.
+            if norm(A.position - L.feeder) < A.detection_radius
                 dir = L.feeder - A.position;
             end
             
-            A.move_direction = dir;
+            % move is invoked
             A.move(L, dir);
-            A.has_food = 0;
         end
         
-        function init_returnToNest(A, landmarks)
-           A.update_local_vectors = zeros(length(landmarks), 1);
-        end
         
-        %% returnToNest
-        % Ant returns to nest after she found food
-        % Tries to go the mist direct way with global_vector
-        % which points straight to the nest
-        
+        %% ReturnToNest
+        % Ant returns to nest after it found food
+        % The global vector is used
         function returnToNest(A, L)
-             % if the ant reached the nest no move is needed.
+            
+             % if the nest is reached:
             if A.global_vector == 0
-                A.nest = 1;
-                disp('reached nest')
+                A.nest = true;
+                A.has_food = false;
+                
+                % results are stored and the stepcounter is reset
+                A.results_nest_finding = [A.results_nest_finding, A.step_counter];
+                A.step_counter = 0;
+                
+                % some variables are reset or adjusted
+                A.updated_local_vectors(A.updated_local_vectors ~= 0) = 0;
                 return
             end
-            A.update_lv(L.landmarks);
-            A.move(L, A.global_vector);
             
+            % The Step-Counter is incremented
+            A.step_counter = A.step_counter + 1;
+            
+            % Local vectors are updated during the way home.
+            A.update_lv(L.landmarks);
+            
+            % move is invoked
+            A.move(L, A.global_vector);
         end
         
         %% move(A,L)
@@ -154,19 +186,29 @@ classdef ant < handle
         % A: Ant
         % L: Landscape
         function move(A, L, move_vector)
+            
+            % All known obstacles are considered
             for i = 1:8
                 move_vector(1) = move_vector(1)...
                     + A.obstacle_vector(A.position(1) + A.move_radius(i,1), A.position(2) + A.move_radius(i,2), 1);
                 move_vector(2) = move_vector(2)...
                     + A.obstacle_vector(A.position(1) + A.move_radius(i,1), A.position(2) + A.move_radius(i,2), 2);
             end
-            while move_vector(1) == 0 && move_vector(2) == 0
+            
+            % if the given move_vector is zero a random move is chosen
+            if isequal(move_vector, [0 0])
                 move_vector = A.move_radius(randi([1,8]));
+            end
+            
+            % The direction of the ant is given a certain random-error:
+            if rand < A.error_prob
+                move_vector(1) = move_vector(1) + (rand-0.5) * move_vector(1);
+                move_vector(2) = move_vector(2) + (rand-0.5) * move_vector(2);
             end
 
             
             % Maindirection and seconddirection are calculated from the
-            % direction given by the global veor. The seconddirection gets a
+            % direction given by the input vecor. The seconddirection gets a
             % Probability smaller than 0.5 based on the angle between
             % maindirection and global vector.
             maindir = round(...
@@ -192,7 +234,6 @@ classdef ant < handle
                 secprob = 1-secprob;
             end
             
-            
             temp = maindir;
             if rand < secprob
                 temp = secdir;
@@ -209,36 +250,37 @@ classdef ant < handle
             end
             
             phi = pi/4;
-            rot = [cos(phi), A.rotation*sin(phi); -A.rotation*sin(phi), cos(phi)];
-
+            rot = [cos(phi), A.rotation * sin(phi); -A.rotation * sin(phi), cos(phi)];
+            
             % Obstacle-Avoiding: New maindirection until possible move is found!
             % 180deg-Turn-Avoiding: New maindirection if ant tries to turn around
             while L.plant(A.position(2) + temp(2), A.position(1) + temp(1)) ~= 0 ...
-                    || ( temp(1) == -A.move_direction(1) && temp(2) == -A.move_direction(2) )
+                    || isequal(temp, -A.move_direction)
                 
                 % A obstacle_vector is created and helps the ant to avoid the wall
                 % and endless iterations.
-                A.obstacle_vector(A.position(1) + temp(1), A.position(2) + temp(2), 1) = ...
-                    A.obstacle_vector(A.position(1) + temp(1), A.position(2) + temp(2), 1) ...
-                    + 10*temp(1);
-                A.obstacle_vector(A.position(1) + temp(1), A.position(2) + temp(2), 2) = ...
-                    A.obstacle_vector(A.position(1) + temp(1), A.position(2) + temp(2), 2) ...
-                    + 10*temp(2);
+                if abs(A.obstacle_vector(A.position(1) + temp(1), A.position(2) + temp(2), 1)) < 40
+                    A.obstacle_vector(A.position(1) + temp(1), A.position(2) + temp(2), 1) = ...
+                        A.obstacle_vector(A.position(1) + temp(1), A.position(2) + temp(2), 1) ...
+                        + 8*temp(1);
+                end
+                if abs(A.obstacle_vector(A.position(1) + temp(1), A.position(2) + temp(2), 2)) < 40
+                    A.obstacle_vector(A.position(1) + temp(1), A.position(2) + temp(2), 2) = ...
+                        A.obstacle_vector(A.position(1) + temp(1), A.position(2) + temp(2), 2) ...
+                        + 8*temp(2);
+                end
                 
-                % The ant "turns" in direction of secdir. New secdir is old
-                % maindirection rotated over old secdir. (mirror)
-                % rot rotates
-                
+                % The ant "turns" around 45deg.
+                % rot is rotation matrix defined above
                 temp = round(temp * rot);
             end
-
+            
+            % move direction is stored, position and global vector are
+            % adjusted.
             A.move_direction = temp;
             A.position = A.position + temp;
             A.global_vector = A.global_vector - temp;
-         
         end % move
+        
     end % public methods
-    methods (Static)
-
-    end % static methods
 end
