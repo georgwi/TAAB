@@ -232,10 +232,53 @@ while the ant has no food
 	end
 end
 \end{lstlisting}
+
+\subsubsection{Render} 
+We soon realised that rendering the output while simulating is the main bottleneck in terms of time consumption. That is why we made it optional, so that it can be turned on or off for every simulation instance in the main-file. Another speed-improvement made here is achieved by not plotting the whole map but only the and an the detection-radius. Local vectors are rendered in a different method after each successful returning to the nest.
+
+\newpage
 \section{Simulation Results and Discussion}
+\subsection{Expected Results}
+We expect our simulation to be able to find short paths from Point A to desired position B, in this case nest to feeder and feeder to nest. We will try to be as close to nature as possible and hope to be able to recreate some of the experimental results given. Some results we consider particularly interesting are avoiding obstacles on returning home and the use and improving of local vectors. Of course there sure are models of desert ant behaviour already, because these animals are topic of research for a long time, but our simulation is mostly based on our own consideration so we are especially tense whether our results are accurate.
+\subsection{Experimental Results}
+\subsubsection{Path Integration Experiment}
+The first run of our simulations completely reproduced a real experiment, given in the paper by R. Wehner\cite{wehner03}. The main purpose is to learn how effective and realistic the implemented model behaviour is.
 
+In the Experiment the ant is allowed to find food and then has to return to the nest with a correct global vector. To increase the difficulty two obstacles are placed between the nest and the feeder to study the return-behaviour of the ants. This interference is made after the ant reaches the nest without obstacles.
+
+To reproduce this situation we set our “ant” at the feeder and adjusted the correct global vector to the nest. Our results are mostly the same as the results seen in the experiment. Only one thing differs in our model: The real ant always chooses the same direction to turn at the obstacle. This might be the result of a simple payoff-learning process, once effective there was no need for the real ant to change the way. Unfortunately the experiment is not repeated with a higher number of different ants.
+
+In the two pictures above two of our result-paths are shown. Obviously the simulated ant tries to go directly to the nest. Once there is a obstacle in the way the path turns randomly left or right until the obstacle is passed. Then the direct way to the nest is chosen again. During the time of wandering along the obstacle the global vector is adapted every step the ant takes.
+
+In this specific case the model is reproducing the real experiment very accurate. There are still some questions open: whether the real ant at a obstacle indeed turns left or right based on a random decision is not clear. But as the experiment given only uses one single ant this question can not be answered.
+
+\subsubsection{Food searching by local vectors}
+In the implementation the local vectors are updated every time the ant reaches the nest. The following picture shows the path taken by the ant in her fourth run to the feeder. On each of the red obstacles there is a landmark with the associated local vector (yellow). If there is a landmark in the “detection-radius” of the ant, visualized by the black circle, the ant considers the local vector for the path. Of course the detection-radius is crucial in this experiment so we tried the same run with different values on a slightly different map.
+
+Above there are three runs of the same simulation with different detection-radius (black circle around the ant). Naturally the path becomes more direct the more landmarks the ant can see at one time step, because the local vectors are summed up. In the first picture the smallest view radius is simulated and in the beginning it is really easy to see, at which points the landmarks come in to view. Between the second and third mark the ant “looses” the path for a short time.
+
+\subsubsection{Path Improvement}
+In the following we tested several maps and landmark-arrangements and graphed the number of steps the ant needed to find food and returning to the nest. Of course once the local vectors were set and updated the step-number decreased. In the picture you can see the map we used for the results discussed below.
+
+A improvement can be seen clearly until the fourth or fifth time the ant has to reach the feeder. Until then the local vectors are not improved anymore [Footnote Video]. Another interesting fact seen in this graph is, that the navigation by local vectors never reaches the same level of effectiveness as navigating back to the nest by the global vector. The results can differ in other maps with more or less landmarks, but some aspects are always the same:
+\begin{itemize}
+\item Global vector navigation is in most cases more efficient than local vector navigation.
+\item In the first few runs the fall of needed steps is highest.
+\item On some map arrangements it is not possible for our model to improve. This happens if there are to few local vectors or the detection-radius is to small.
+\end{itemize}
+
+\newpage
 \section{Summary and Outlook}
+\subsection{Results}
+In this paper we showed that the model was able to replicate the path pattern of ants, when searching randomly for food, when returning to the nest by global vector and when using local vectors to search for food through a simple agent-based model. Most of the experiments described by Wehner[footnote] were recreated and our modeled ants behaved indeed similar to the given results.
+\subsection{Further Improvments}
+One of the most obvious improvements to our model must be the inclusion of local vectors when returning home. Ants navigate with a certain chance by landmarks instead of the global vector on their way back to the nest as is showed in [[Wehner, 1998]]. This is a complication, but can clearly improve the steps needed when returning home. Especially with a defective or even wrong global vector this can be very helpful when searching for the nest. This situation was not part of our model experiments and is therefore listed in our simplifications.
 
+Also, we noticed that our model sometimes got stuck on random generated maps, when caves, small holes and certain patterns occurred. Our artificial made experimental maps where free of those trouble generating conditions, so that our model still produces valid results, but the improvement of the move method in the class ant definitely should be considered when further improvements are done.
+
+Another question of interest is, how our model would behave if we gave it a higher degree of freedom in terms of moving. For now we have limited the move radius to the first order Moore Neighbours. One could also think of a ant, that can watch several steps ahead in order to find out which positions are desirable, creating a better path and realising obstacles earlier.
+
+While running, our model uses the local vectors only as long as they stay in the view radius of the ant, therefore forgetting about them as early as they went out of sight. The same holds true for the detection of the food. This leads in some situations to the loosing of track, even after the food was in the detection radius of the ant. A more realistic approach would be to make the model “slowly forget” about the landmark or the position of the feeder.
 \appendix
 
 \section{Research Plan}
