@@ -189,6 +189,49 @@ where $\vec{l_i}$ are the local vectors, $i$ ranging from the first to the last 
 
 \subsubsection{Return to nest}
 When returning to the nest, the model uses the same move method as when 	searching, but instead of calculating a general direction out of the occurring local vectors the ant uses the global vector, which always leads straight back to the nest. While returning to the nest it updates all local vectors while passing the related landmarks. In our implementation the local vectors always points to the last landmark the ant has passed or are adjusted toward this position. Thereby the ant develops a steady route that is a close to the optimal route. Of course there is no possibility to find out how real ants remember the exact direction and length of the local vectors and therefore this way of implementation must be tested for reliability later on.
+
+\subsubsection{Updating the local vectors on all landmarks}
+
+For the implementation we decided, that our model of the ant, would be able to remember only the last global vector where a landmark was spotted. This simplification seems to be adequate because of the limited brain complexity of real ants. For this reason the model, when spotting a new landmark always calculates a vector pointing to the latest landmark and thus developing a path that leads from the first landmark, the nest, to the latest, which should be quite close to the feeder. This implementation however will result in non-changing local vectors after the first run. So we included a \textit{grow-factor}, which only allows a small adjusting every time the ant passes the landmark. As a result the learning curve of the ant became interesting, as described below in the experimental results.
+
+\begin{eqnarray}
+a & = & 0.5 * \exp \left(-\frac{||\vec{l_i}||_2}{10}\right) \\
+\vec{l_i} & = & a * \text{round} \left(\vec{l_i}  + \left(\vec{g_i} - {\vec{g}_{i-1}}\right)\right)
+\end{eqnarray}
+
+\subsubsection{move} 
+The move method is heart of the ant class: it accepts any general direction vector as input and sets the new position of the ant as a result. A general direction input can be calculated in the method “find food” or “return to nest”. It also handles all the checking for obstacles. Move is invoked in every time-step. Because the ant has only a choice of 8 possible next positions the method must calculate a new direction vector to one of the first order Moore neighbours:
+
+
+To calculate the matching Moore neighbour from the general direction vector we use the following formula and call the result the “main-direction”.
+
+\begin{equation}
+\vec{m} = \text{round}\left(\vec{dir}*\frac{1}{\text{max}|dir_i|}\right)
+\end{equation}
+
+In case the general direction is not exactly a multiple of a vector given by the Moore neighbourhood this calculation will result in a non-natural path (s. picture below). So we calculated a “second-direction” which is chosen as move direction with a certain probability depending on the angle between the general direction and the main direction. This allowed to walk directly towards a target. Some limit cases are handled separate.
+
+\begin{eqnarray}
+\vec{s} & = & \vec{m}-\vec{dir} * \text{min} \left( |dir_i| \right) \\ 
+p & = & \frac{\text{min}|dir_i|}{\text{max} |dir_i|}
+\end{eqnarray}
+
+If there is no general direction given to the method move, or if the general direction is zero a vector is generated based on the previous move direction. This vector then is turned around +/- 45 degree with a certain probability. This probability defines how twisted the ants path is. The following picture was taken with a low turning-probability (10 percent).
+
+In the picture it is easily seen, that the ant can not move trough obstacles. This is also part of the method move. Therefore the method checks the desired position on the map. If the position is not available the move-vector is turned around 45 degree clockwise or counter-clockwise, then the desired position is checked again until a possible step is found.
+
+\subsection{Simulation}
+The simulation class main purpose is to serve as a holder for the landscape and the ant. It also handles everything that has to do with output. The most important functions are the run-method, and the render-method, these two are described below.
+\subsubsection{Run}
+In this method there are basically two while-loops checking whether the ant is searching for food or trying to return to the nest. This is indicated by two Boolean values in the class ant. In each cases the corresponding ant-methods are invoked. Here is a simple example of using parts of the run-method (pseudo code):
+\begin{lstlisting}
+while the ant has no food
+	search for food and move one step
+	if the simulation needs to be rendered
+		render the actual position of the ant on the map
+	end
+end
+\end{lstlisting}
 \section{Simulation Results and Discussion}
 
 \section{Summary and Outlook}
