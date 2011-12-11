@@ -8,6 +8,7 @@
 \usepackage{subfig}
 \usepackage{amssymb, amsmath}
 \usepackage{hyperref}
+\usepackage{pdfpages}
 \usepackage[framed,numbered,autolinebreaks,useliterate]{mcode}
 
 \hypersetup{
@@ -24,7 +25,7 @@
 
 \title{Simulate Desert Ant Behaviour}
 \author{Georg Wiedebach, Wolf Vollprecht}
-%\date{date} 
+\date{date} 
 
 \begin{document}
 
@@ -77,7 +78,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-
+\includepdf{images/confirmation_en.pdf}
 % IMPORTANT
 % you MUST include the ETH declaration of originality here; it is available for download on the course website or at http://www.ethz.ch/faculty/exams/plagiarism/index_EN; it can be printed as pdf and should be filled out in handwriting
 
@@ -139,7 +140,11 @@ Our landscape should contain all the information about
 \end{itemize}
 
 We chose to limit our landscape: We implemented fixed boundaries, which hinder the ant from escaping out of our experiment area. This is important to limit the time the ant needs to find food and thus making our simulation very less time-consuming. A matrix stores information about taken and free points by the values true or false, where false stand for an obstacle. Nest, feeder, landmarks and local vectors are saved separately as vectors, to make them easy to reach.
-
+\begin{figure}[h!]
+	\centering
+ 	\includegraphics[scale=0.6]{images/landscape.jpg}
+ 	\caption{Example of a simple landscape: obstacles red, feeder and nest are indicated with x and o}
+\end{figure}
 \subsubsection*{Ant}
 Our ant should follow certain, simple rules to move according to the studies we received as part of the project description. Such are basic rules like avoiding obstacles or a little more specific rules like following the global vector when returning to the nest and using the local vectors of the landmarks when finding the food again. During the simulation and after the ant has had success in finding food our local vectors should as well change according to the new found and better path.
 
@@ -174,6 +179,13 @@ Landmark & turquoise & blue circle \\
 \caption{Color values and their meaning}
 \end{table}
 
+\begin{figure}[h!]
+	\centering
+	\subfloat[Original image]{\includegraphics[scale=0.4]{images/map2skal.png}}
+	\subfloat[Generated landscape]{\includegraphics[scale=0.5]{images/map2.jpg}}
+	\caption[Generating a map from image]{Generated map from image}
+\end{figure}
+
 \subsection{Ant}
 
 The class \texttt{ant} mainly contains the current position of the ant, the local vectors on landmarks and the path integrated global vector which should always point to the nest (as long as the ant moves are coherent).
@@ -199,7 +211,7 @@ a & = & 0.5 * \exp \left(-\frac{||\vec{l_i}||_2}{10}\right) \\
 \vec{l_i} & = & a * \text{round} \left(\vec{l_i}  + \left(\vec{g_i} - {\vec{g}_{i-1}}\right)\right)
 \end{eqnarray}
 
-\subsubsection{move} 
+\subsubsection{Move} 
 The move method is heart of the ant class: it accepts any general direction vector as input and sets the new position of the ant as a result. A general direction input can be calculated in the method “find food” or “return to nest”. It also handles all the checking for obstacles. Move is invoked in every time-step. Because the ant has only a choice of 8 possible next positions the method must calculate a new direction vector to one of the first order Moore neighbours:
 
 
@@ -220,6 +232,17 @@ If there is no general direction given to the method move, or if the general dir
 
 In the picture it is easily seen, that the ant can not move trough obstacles. This is also part of the method move. Therefore the method checks the desired position on the map. If the position is not available the move-vector is turned around 45 degree clockwise or counter-clockwise, then the desired position is checked again until a possible step is found.
 
+\begin{figure}[h!]
+	\centering
+	\subfloat[Without second direction]{\includegraphics[scale=0.5]{images/mainvec.jpg}} \hspace*{1cm}
+	\subfloat[With second direction]{\includegraphics[scale=0.5]{images/secvec.jpg}}
+	\caption[Comparison: Using second direction or not]{Calculating move direction with and without second direction}
+\end{figure}
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.6]{images/foodsearch.jpg}
+	\caption[Ants first search for food]{First search for food. No local vectors are set.}
+\end{figure}
 \subsection{Simulation}
 The simulation class main purpose is to serve as a holder for the landscape and the ant. It also handles everything that has to do with output. The most important functions are the run-method, and the render-method, these two are described below.
 \subsubsection{Run}
@@ -327,11 +350,13 @@ The evolution may have taught ants a lot of useful tricks and methods to survive
 \subsection{ant.m}
 \lstinputlisting{../code/ant.m}
 
+\newpage
 \section{References}
 
 \bibliographystyle{plain}
 \bibliography{references}
 
+\listoffigures
 
 
 
