@@ -100,12 +100,57 @@ In this paper we will try to show how to replicate the behaviourr of desert ants
 
 
 \section{Individual contributions}
-
+The whole project was done in a cooperative manner.
 \newpage
+
 \section{Introduction and Motivations}
 
-\section{Description of the Model}
+We think ants are exciting animals because – despite their small body mass and therefore small brain – they form very huge and complex social structures. Very large numbers of them work together efficiently like one body. This requires a high level of coordination. We have already seen some videos which show the great achievements of ant colonies in building and hunting. Now we found out about their navigation abilities and are curious to learn how ants are able to cover extreme distances. The human being would definitely get lost when trying to journey this far in the desert without GPS or any other form of modern help, so one of our main goals will be to find out how ants can master this difficult task.
 
+Ants have been subject of modern research since 1848, the motivations were often interest in their instincts, society and of course the hope to learn from them. Studies in ant movement became even more compelling when scientists started to look for algorithms that solve such fundamental tasks like finding the shortest way in a graph (Graph Theory). The class of ant colony optimization algorithms was introduced 1992 and has since been a field of active study.
+
+However, those algorithms are using the behaviour of forest ants of the western hemisphere, which is not similar to the behaviour of desert in terms of choosing a good path and finding food. Since we are studying desert ants we had to take a different approach. Desert ants rely much more heavily on the few landmarks they find in their environment and less on pheromone tracks other ants have laid out before them, like forest ants do. Also they make use of a path-integrator with which they are able to track their position in reference to where they started the journey, most likely the nest.\\\\
+Results of interest are:
+\begin{itemize}
+\item How optimized is navigation by vectors 
+\item What is the most energy-consuming task
+\item Out of which states is it possible for the ant to find the nest (e.g. dropping the ant somewhere else, outside of her regular path etc.)
+\item How well does the ant learn in the course of repeated journey towards the food and back
+\end{itemize}
+
+Of course we were as well motivated to improve our knowledge of MATLAB\texttrademark
+
+\newpage
+
+\section{Description of the Model}
+We would like to create a model of desert ant behaviour. This will include their search for food, their returning to the nest and their orientation with global and local vectors. Also we will see how close our algorithms are to real ant movement. Therefore we want to simulate the experiments described in the papers. Our model should be able to deal with different numbers of landmarks, obstacles and starting points. We would like to give our ants the ability to learn and improve their efficiency when searching and finding food.
+
+Because of the nature of our problem we choose to design our simulation around a time-discrete step-based model of an ant. We chose to let only one ant run at a time, because we don’t think that an higher number of ants would make much of a difference considering the vast space in the deserts. Therefore we can leave out influences of near ants like separation and cohesion (compare Agent Based Modeling).
+
+The simulation should be capable of finding a good path between nest and feeder and use a simple learning process to achieve that. We want to create a model, that can autonomous avoid obstacles and not get stuck in a corner. In order to meet this requirements we split our simulation in two parts:
+
+\subsubsection*{Landscape}
+Our landscape should contain all the information about
+\begin{itemize}
+
+\item Position of the nest
+\item Position of the feeder
+\item Obstacles (stones, trees, cacti, oases, sand dunes and many more), from which some can be used as landmarks
+\end{itemize}
+
+We chose to limit our landscape: We implemented fixed boundaries, which hinder the ant from escaping out of our experiment area. This is important to limit the time the ant needs to find food and thus making our simulation very less time-consuming. A matrix stores information about taken and free points by the values true or false, where false stand for an obstacle. Nest, feeder, landmarks and local vectors are saved separately as vectors, to make them easy to reach.
+
+\subsubsection*{Ant}
+Our ant should follow certain, simple rules to move according to the studies we received as part of the project description. Such are basic rules like avoiding obstacles or a little more specific rules like following the global vector when returning to the nest and using the local vectors of the landmarks when finding the food again. During the simulation and after the ant has had success in finding food our local vectors should as well change according to the new found and better path.
+
+\subsection{Simplifications}
+There will be simplifications and assumptions, the most important ones are:
+\begin{itemize}
+\item We decided to create fixed boundaries on our Landscape.
+\item For our model we strictly separate navigation by global vector (feeder to nest) and by local vectors (nest to feeder). This is due to the fact that this behaviour can differ from ant to ant and there is no consistent result true for all desert ants.
+\item The model will have a “detection-radius” in which landmarks, nest and feeder are considered for moving and navigating.
+\end{itemize}
+\newpage
 \section{Implementation}
 
 \section{Simulation Results and Discussion}
