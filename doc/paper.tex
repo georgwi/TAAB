@@ -271,18 +271,38 @@ In the Experiment the ant is allowed to find food and then has to return to the 
 
 To reproduce this situation we set our “ant” at the feeder and adjusted the correct global vector to the nest. Our results are mostly the same as the results seen in the experiment. Only one thing differs in our model: The real ant always chooses the same direction to turn at the obstacle. This might be the result of a simple payoff-learning process, once effective there was no need for the real ant to change the way. Unfortunately the experiment is not repeated with a higher number of different ants.
 
+\begin{figure}
+	\centering
+	\subfloat{\includegraphics[scale=0.4]{images/return1.jpg}}
+	\hspace{1cm}
+	\subfloat{\includegraphics[scale=0.4]{images/return2.jpg}}
+	\caption{Returning to nest with global vector}
+\end{figure}
+
 In the two pictures above two of our result-paths are shown. Obviously the simulated ant tries to go directly to the nest. Once there is a obstacle in the way the path turns randomly left or right until the obstacle is passed. Then the direct way to the nest is chosen again. During the time of wandering along the obstacle the global vector is adapted every step the ant takes.
 
 In this specific case the model is reproducing the real experiment very accurate. There are still some questions open: whether the real ant at a obstacle indeed turns left or right based on a random decision is not clear. But as the experiment given only uses one single ant this question can not be answered.
 
 \subsubsection{Food searching by local vectors}
 In the implementation the local vectors are updated every time the ant reaches the nest. The following picture shows the path taken by the ant in her fourth run to the feeder. On each of the red obstacles there is a landmark with the associated local vector (yellow). If there is a landmark in the “detection-radius” of the ant, visualized by the black circle, the ant considers the local vector for the path. Of course the detection-radius is crucial in this experiment so we tried the same run with different values on a slightly different map.
-
+\begin{figure}[h!]
+	\centering
+	\subfloat{\includegraphics[scale=0.4]{images/view_small.jpg}}
+	\hspace{1cm}
+	\subfloat{\includegraphics[scale=0.4]{images/view_medium.jpg}}
+	\\
+	\subfloat{\includegraphics[scale=0.6]{images/view_large.jpg}}
+	\caption[Comparing growing detection radius]{Comparison of different sizes of the detection radius}
+\end{figure}
 Above there are three runs of the same simulation with different detection-radius (black circle around the ant). Naturally the path becomes more direct the more landmarks the ant can see at one time step, because the local vectors are summed up. In the first picture the smallest view radius is simulated and in the beginning it is really easy to see, at which points the landmarks come in to view. Between the second and third mark the ant “looses” the path for a short time.
 
 \subsubsection{Path Improvement}
 In the following we tested several maps and landmark-arrangements and graphed the number of steps the ant needed to find food and returning to the nest. Of course once the local vectors were set and updated the step-number decreased. In the picture you can see the map we used for the results discussed below.
-
+\begin{figure}
+	\centering
+	\subfloat[Map with local vectors]{\includegraphics[scale=0.4]{images/map2_withlocal.jpg}}
+	\subfloat[]{\includegraphics[scale=0.35]{images/pi.jpg}}
+\end{figure}
 A improvement can be seen clearly until the fourth or fifth time the ant has to reach the feeder. Until then the local vectors are not improved anymore [Footnote Video]. Another interesting fact seen in this graph is, that the navigation by local vectors never reaches the same level of effectiveness as navigating back to the nest by the global vector. The results can differ in other maps with more or less landmarks, but some aspects are always the same:
 \begin{itemize}
 \item Global vector navigation is in most cases more efficient than local vector navigation.
