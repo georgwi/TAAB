@@ -279,10 +279,44 @@ Also, we noticed that our model sometimes got stuck on random generated maps, wh
 Another question of interest is, how our model would behave if we gave it a higher degree of freedom in terms of moving. For now we have limited the move radius to the first order Moore Neighbours. One could also think of a ant, that can watch several steps ahead in order to find out which positions are desirable, creating a better path and realising obstacles earlier.
 
 While running, our model uses the local vectors only as long as they stay in the view radius of the ant, therefore forgetting about them as early as they went out of sight. The same holds true for the detection of the food. This leads in some situations to the loosing of track, even after the food was in the detection radius of the ant. A more realistic approach would be to make the model “slowly forget” about the landmark or the position of the feeder.
+
+\newpage
 \appendix
 
 \section{Research Plan}
+\textbf{Group Name:} The Anteaters Are Back\\ \\
+\textbf{Group participants names:} Wolf Vollprecht, Georg Wiedebach
 
+\subsection{General Introduction}
+
+We think ants are exciting animals because – despite their small body mass and therefore small brain – they form very huge and complex social structures. Very large numbers of them work together efficently like one body. This requires a high level of coordination. We have already seen some videos which show the great achievngs of ant colonies in building and hunting. Now we found out about their naviagion abilities and are curious to learn how ants are able to cover extreme (in comparison to their own body size) distances. The human being would definitely get lost when trying to jurney this far in the desert wthout GPS or any other form of modern help, so one of our main goals will be to find out how ants can master this difficult task.
+
+Ants have been subject of modern research since 1848, the motivations were often interest in their instincts, society and of couse the hope to learn from them. Studies in ant movement became even more compelling when scientists started to look for algorithms that solve such fundamental tasks like finding the shortest way in a graph (Graph Theorie). The class of ant colony optimization algorithms was introduced 1992 and has since been a field of active study.
+
+\subsection{Fundamental Questions}
+\begin{itemize}
+\item How does ant movement and navigation work in challenging environments such as the desert?
+\begin{itemize}
+\item Is ant communication connected to ant navigation?
+\item Which mechanisms and factors influence ant movement?
+\item Are there different strategies to find the shortest/safest etc. path?
+\end{itemize}
+\item How can we describe ant paths in mathematical terms?
+\begin{itemize}
+\item How efficient are our mathematical models of the real ant behaviour?
+\end{itemize}
+\item How does our finding apply to the real world?
+\end{itemize}
+We would like to create a model of desert ant behaviour. This will include their search for food, their returning to the nest and their orientation with global and local vectors. Also we will see how close our algorithms are to real ant movement. Therefore we want to simulate the experiments described in the papers. Our model should be able to deal with different numbers of landmarks, obstacles and starting points. We would like to give our ants the ability to learn and improve their efficency when searching and finding food. Of course there will be some simplifications we eventually will have to deal with: Such as ... will be updated during work on the simulation.
+
+\subsection{Expected Results}
+
+We expect our simulation to be able to find short paths from Point A to desired positon B (i.e. feeder, nest) and back. We will try to be as cose to nature as possible and hope to be able to recreate some of the experimantal results given. Some results we consider particulary interesting are avoiding obstacles on returning home or finding a way to the nest after being deffered to a place where our ant has a non-fitting global vector. Of course we hope that there are already some good mathematical models available on ant movement, because these animals are topic of research for a long time already.
+
+The evolution may have taught ants a lot of useful tricks and methods to survive in environmets like the desert. Probably there are more ways to orientate than only by landmarks. Ants may have similar ways to find out their geographic orientation like pigeons, or use the sun as a fix-point. We are curious to find out more about that.
+
+
+\newpage
 \section{MATLAB Code}
 \subsection{main.m}
 \lstinputlisting{../code/main.m}
