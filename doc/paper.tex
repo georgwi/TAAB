@@ -151,8 +151,30 @@ There will be simplifications and assumptions, the most important ones are:
 \item The model will have a “detection-radius” in which landmarks, nest and feeder are considered for moving and navigating.
 \end{itemize}
 \newpage
-\section{Implementation}
 
+\section{Implementation}
+As described above our simulation consists of two main parts: The landscape and the ant. Both of these were implemented as separate classes. A third class the simulation-class should handle the rendering, initialising and iterations. We also used a main-file in which we declared variables that would have impact on the outcome of our simulation like the detection-radius of the ant or information on the map, that should be loaded.
+\subsection{Landscape}
+The landscape class only contains information about the map, the nest and the feeder as well as some spots which are landmarks, used by the ant as anchor points for local vectors.
+
+We implemented different versions of loading landscapes into our simulation. Beside the possibility of creating the landscape-matrix in a separate m-file and the random-map generator  we often used a simple but elegant method for generating maps out of arbitrary made generic Portable Network Graphics. This method finds specific color values and translates them into their meaning in the context of the landscape.
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{lll}
+	\cmidrule[1pt]{2-3}
+	& Color in png-file & Color in Matlab \\
+	\midrule
+Obstacle & black & red \\ \midrule
+Nest & green & black circle \\ \midrule
+Feeder & blue & black cross \\ \midrule
+Landmark & turquoise & blue circle \\
+\bottomrule  
+\end{tabular}
+\caption{Color values and their meaning}
+\end{table}
+
+\subsection{Ant}
 \section{Simulation Results and Discussion}
 
 \section{Summary and Outlook}
