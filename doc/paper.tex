@@ -179,6 +179,16 @@ Landmark & turquoise & blue circle \\
 The class \texttt{ant} mainly contains the current position of the ant, the local vectors on landmarks and the path integrated global vector which should always point to the nest (as long as the ant moves are coherent).
 We built our ant around the most important method: \texttt{move}. The  \texttt{move} function is called out of two different methods the  \texttt{find\_food} and the \texttt{return\_to\_nest}. In the following all methods of the class \texttt{ant} are described:
 
+\subsubsection{Find food} This loop iterates the move-method until the ant reaches the food. Depending on how often the ant has already been on the track, it uses the aggregated local vectors to calculate a direction which the ant should follow to reach the food sooner. As soon as the feeder is in a certain distance (the detection radius) the ant runs straight towards it.
+
+\subsubsection{Calculate the direction from landmarks}
+\begin{equation}
+	\vec{v}_{direction} = \sum_{i=0}^{n}\vec{l_i} \quad \forall ||\vec{l_i}||_2 < r_{detection}
+\end{equation}
+where $\vec{l_i}$ are the local vectors, $i$ ranging from the first to the last landmark and $r_{detection}$ is the view radius of the ant.
+
+\subsubsection{Return to nest}
+When returning to the nest, the model uses the same move method as when 	searching, but instead of calculating a general direction out of the occurring local vectors the ant uses the global vector, which always leads straight back to the nest. While returning to the nest it updates all local vectors while passing the related landmarks. In our implementation the local vectors always points to the last landmark the ant has passed or are adjusted toward this position. Thereby the ant develops a steady route that is a close to the optimal route. Of course there is no possibility to find out how real ants remember the exact direction and length of the local vectors and therefore this way of implementation must be tested for reliability later on.
 \section{Simulation Results and Discussion}
 
 \section{Summary and Outlook}
