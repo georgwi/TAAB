@@ -61,15 +61,12 @@ classdef ant < handle
                         ~isequal(A.local_vectors(i,:), [0 0]) && ...
                         A.updated_local_vectors(i) == 0
                     
-                    if isequal(A.local_vectors(i,:) + landmarks(i,:) - A.position, [0 0])
-                        A.updated_local_vectors(i) = true;
-                    end
-                    
                     % all local vectors in the detection radius are summed up
                     temp = temp + A.local_vectors(i,:) + landmarks(i,:) - A.position;
                     
-                    if isequal(temp, [0 0])
+                    if norm(temp) <= 1
                         A.updated_local_vectors(i) = true;
+                        disp('stop')
                     end
                    
                 end
@@ -178,6 +175,7 @@ classdef ant < handle
             A.update_lv(L.landmarks);
             
             % move is invoked
+            A.global_vector
             A.move(L, A.global_vector);
         end
         

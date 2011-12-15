@@ -13,7 +13,7 @@ addpath('Maps');
 
 runduration = 5; 	% Duration of simulation
 render = true;
-path_render = false;
+path_render = true;
 
 
 
@@ -28,20 +28,20 @@ path_render = false;
 % 2. Random map from generator
 % Some values need to be set by the user:
 % ------------------------------------------------
-mapsize = 100;
-s = simulation(mapsize, render, path_render);
-s.l.generateLandscape(mapsize, 30, 55, 0.8);
-s.l.nest = [5 5];
-s.a.position = s.l.nest;
-s.l.feeder = [95 95];
+% mapsize = 100;
+% s = simulation(mapsize, render, path_render);
+% s.l.generateLandscape(mapsize, 30, 55, 0.8);
+% s.l.nest = [5 5];
+% s.a.position = s.l.nest;
+% s.l.feeder = [95 95];
 
 
 % 3. Map from image.png
 % ------------------------------------------------
-% s = simulation(100, render, path_render);
-% s.l.load_image('map2', 'png')
-% s.a.position = s.l.nest;
-% s.l.landmarks = [s.l.landmarks; s.l.nest];
+s = simulation(100, render, path_render);
+s.l.load_image('map2', 'png')
+s.a.position = s.l.feeder;
+s.l.landmarks = [s.l.landmarks; s.l.nest];
 
 
 
