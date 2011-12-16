@@ -1,6 +1,39 @@
 % This file was created with JabRef 2.6.
 % Encoding: Cp1252
 
+@ARTICLE{wiki1,
+  author = {Wikipedia contributors},
+  title = {Graph theory:
+	
+	(http://en.wikipedia.org/w/index.php?title=Graph\_theory\&oldid=465959034)},
+  journal = {Wikipedia, The Free Encyclopedia.},
+  year = {15.12.2011},
+  timestamp = {2011.12.14},
+  url = {http://en.wikipedia.org/w/index.php?title=Graph\_theory&oldid=465959034}
+}
+
+@ARTICLE{wiki2,
+  author = {Wikipedia contributors},
+  title = {Ant colony optimization algorithms:
+	
+	(http://en.wikipedia.org/w/index.php?title=Ant\_colony\_optimization\_algorithms\&oldid=459281208)},
+  journal = {Wikipedia, The Free Encyclopedia.},
+  year = {06.11.2011},
+  timestamp = {2011.12.14},
+  url = {http://en.wikipedia.org/w/index.php?title=Ant\_colony\_optimization\_algorithms&oldid=459281208}
+}
+
+@ARTICLE{kreis,
+  author = {Martina Bisculm},
+  title = {Warum Menschen immer im Kreis laufen:
+	
+	(http://wissenschaft.de/wissenschaft/news/306514.html)},
+  journal = {ddp/wissenschaft.de},
+  year = {15.12.2011},
+  timestamp = {2011.12.15},
+  url = {http://wissenschaft.de/wissenschaft/news/306514.html}
+}
+
 @ARTICLE{wehner98,
   author = {M. Collett and T. S. Collett and S. Bisch and R. Wehner},
   title = {Local and global vectors in desert ant navigation},
@@ -24,34 +57,10 @@
   year = {1988}
 }
 
-@ARTICLE{kreis,
-  author = {ddp/wissenschaft.de - Martina Bisculm},
-  title = {http://wissenschaft.de/wissenschaft/news/306514.html},
-  year = {15.12.2011},
-  timestamp = {2011.12.15},
-  url = {http://wissenschaft.de/wissenschaft/news/306514.html}
-}
-
 @ARTICLE{wehner03,
   author = {R. Wehner},
   title = {Desert ant navigation: how miniature brains solve complex tasks},
   journal = {Karl von Frisch Lecture},
   year = {2003}
-}
-
-@ARTICLE{wiki1,
-  author = {Wikipedia},
-  title = {http://en.wikipedia.org/wiki/Graph\_theory},
-  year = {15.12.2011},
-  timestamp = {2011.12.14},
-  url = {http://en.wikipedia.org/wiki/Graph\_theory}
-}
-
-@ARTICLE{wiki2,
-  author = {Wikipedia},
-  title = {http://en.wikipedia.org/wiki/Ant\_colony\_optimization\_algorithms},
-  year = {15.12.2011},
-  timestamp = {2011.12.14},
-  url = {http://en.wikipedia.org/wiki/Ant\_colony\_optimization\_algorithms}
 }
 
