@@ -13,12 +13,12 @@ classdef landscape < handle
     end
     
     methods (Access = public) 
-    	%% Initialize Landscape 
+    	%% Initialize landscape 
         function L = landscape(N)
             L.size = N;
         end
         
-        %% Gererate random Landcape
+        %% Generate random landcape
         function generateLandscape(L, n, num, size, prob)
             L.plant = zeros(n,n);
             L.plant(1,:) = ones(1,n);
@@ -26,34 +26,33 @@ classdef landscape < handle
             L.plant(:,1) = ones(1,n);
             L.plant(:,n) = ones(1,n);
             
-            % 1. Zufällige Hindernisse Plazieren Anzahl der Hindernisse soll fest sein:
+            % Place random obstacles. Number of obstacles is a constant.
             posspeicher = zeros(num,1);
 
             for i = 1:num
                 pos = n+1;
-                % Finden eines geeigneten Ortes:
+                % find a place:
                 while L.plant(pos) || L.plant(pos-1) || L.plant(pos+1) || L.plant(pos-n) || L.plant(pos+n)
                     pos = randi([n+1,n*n-(n+1)]);
                 end
         
-                % Plazieren und speichern des Ortes für Schritt 2:
+                % place and save:
                 posspeicher(i) = pos;
                 L.plant(pos) = 1;
             end
 
-            % 2. Vergrössern dieser Hindernisseauf eine bestimmte Grösse (Hindernisse
-            % wachsen über Ränder hinaus und auf der Anderen Spielfeldseite wieder
-            % hinein.
+            % Grow obstacle. If obstacle is bigger than maps boundaries, they continue growing on
+            % the other side
             neigh = [-1 1 -n n];
 
             for i = 1:num
                 dir = inf;
                 for j = 1:size
-                    % Manchmal wird eine Richtungsänderung zugelassen:
+                    % Grow in different direction with a certain probability:
                     if rand < prob
                         dir = inf;
                     end
-                    % Wählen einer zufälligen Richtung zum Vergrössern:
+                    % Choose direction to grow:
                     while posspeicher(i) + dir < 1 || posspeicher(i) + dir > n*n
                         dir = neigh(randi(4));
                     end
