@@ -10,6 +10,7 @@
 \usepackage{hyperref}
 \usepackage{pdfpages}
 \usepackage[framed,numbered,autolinebreaks,useliterate]{mcode/mcode}
+\usepackage{url}
 
 \hypersetup{
     colorlinks,%
@@ -124,7 +125,7 @@ Results of interest are:
 \section{Description of the Model}
 Our aim was to create a model of desert ant behaviour, that reproduces the real ant behaviour as acurate as possible. This will include their search for food, their returning to the nest and their orientation with global and local vectors. Also we are going to test how close our algorithms are to real ant movement. Therefore we want to simulate the experiments described in the papers\cite{wehner03,wehner98}. Our model should be able to deal with different numbers of landmarks, obstacles and starting points. We would like to model our ant with the ability to learn and improve its efficiency when searching and finding food.
 
-Because of the nature of the problem we chose to design our simulation around a time-discrete step-based model of an ant. We chose to simulate only one ant at a time, because we don’t think that an higher number of ants would make much of a difference considering the vast space in the deserts. Therefore we can leave out influences of near ants like separation and cohesion (compare Agent Based Modeling\cite{soms}).
+Because of the nature of the problem we chose to design our simulation around a time-discrete step-based model of an ant. We chose to simulate only one ant at a time, because we don’t think that an higher number of ants would make much of a difference considering the vast space in the deserts. Therefore we can leave out influences of near ants like separation and cohesion (compare Agent Based Modeling)\cite{soms}.
 
 The simulation should be capable of finding a good path between the nest and feeder and by utilizing a simple learning process. We wanted to create a model, that can autonomously avoid obstacles and that does not get stuck in a corner. In order to meet this requirements we have split our simulation in two parts:
 
@@ -227,7 +228,7 @@ The move method is the heart of the ant class: it accepts any general direction 
 \begin{figure}
 \centering
 \includegraphics[width=6cm]{images/Mooreneighbours.pdf}
-\caption[First order moore neighbours]{First order Moore neighbours}
+\caption[First order moore neighbours]{First order Moore neighbours\cite{soms,pic1}}
 \label{moore}
 \end{figure}
 
@@ -410,9 +411,10 @@ The evolution may have taught ants a lot of useful tricks and methods to survive
 \newpage
 \section{References}
 
-\bibliographystyle{ama}
+\bibliographystyle{plain}
 \bibliography{references}
 
+\newpage
 \listoffigures
 
 
