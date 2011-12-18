@@ -11,7 +11,7 @@ addpath('Maps');
 
 %% Variables
 
-runduration = 5; 	% Duration of simulation
+runduration = 4; 	% Duration of simulation
 render = true;
 path_render = true;
 
@@ -40,7 +40,7 @@ path_render = true;
 % ------------------------------------------------
 s = simulation(100, render, path_render);
 s.l.load_image('map2', 'png')
-s.a.position = s.l.feeder;
+s.a.position = s.l.nest;
 s.l.landmarks = [s.l.landmarks; s.l.nest];
 
 
@@ -52,10 +52,9 @@ s.a.createLocalVectors(s.l.landmarks);
 
 for i = 1:runduration
     s.run();
-    i
 end
 
-%aviobj = close(s.aviobj);
+aviobj = close(s.aviobj);
 % enable to create a movie (3/3)
 
 

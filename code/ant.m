@@ -7,7 +7,7 @@ classdef ant < handle
         % Variables that may be set for testing:
         detection_radius = 20;          % View radius of the ant
         error_prob = 0.3;               % Error probability
-        turn_prob = 0.3;                % Random turns
+        turn_prob = 0.4;                % Random turns
         
         % general variables
         position                        % Position of Ant
@@ -66,7 +66,6 @@ classdef ant < handle
                     
                     if norm(temp) <= 1
                         A.updated_local_vectors(i) = true;
-                        disp('stop')
                     end
                    
                 end
@@ -175,7 +174,6 @@ classdef ant < handle
             A.update_lv(L.landmarks);
             
             % move is invoked
-            A.global_vector
             A.move(L, A.global_vector);
         end
         
