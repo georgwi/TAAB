@@ -48,6 +48,8 @@ classdef ant < handle
                     
                     % Storing information about update
                     A.last_local_vector = landmarks(i,:);
+                    
+                    %%
                     A.updated_local_vectors(i) = true;
                 end
         	end
@@ -154,7 +156,7 @@ classdef ant < handle
         function returnToNest(A, L)
             
              % if the nest is reached:
-            if norm(A.global_vector) <= 1
+            if A.global_vector == 0
                 A.nest = true;
                 A.has_food = false;
                 

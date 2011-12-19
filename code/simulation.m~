@@ -13,7 +13,7 @@ classdef simulation < handle
         r_ant           % rendering
         r_ant_view      % rendering
         
-        aviobj = avifile('antmovie.avi','fps',30);
+%        aviobj = avifile('antmovie.avi','fps',30);
 % enable to create a movie (1/3)
     end
     

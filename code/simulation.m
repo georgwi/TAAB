@@ -13,7 +13,7 @@ classdef simulation < handle
         r_ant           % rendering
         r_ant_view      % rendering
         
-        aviobj = avifile('antmovie.avi','fps',30);
+%        aviobj = avifile('antmovie.avi','fps',30);
 % enable to create a movie (1/3)
     end
     
@@ -112,8 +112,8 @@ classdef simulation < handle
                 plot(S.a.position(1), S.a.position(2),'.','Color','w')
             end
             
-            F = getframe(1);
-            S.aviobj = addframe(S.aviobj,F);
+%            F = getframe(1);
+%            S.aviobj = addframe(S.aviobj,F);
 % enable to create a movie (2/3)
         end
         

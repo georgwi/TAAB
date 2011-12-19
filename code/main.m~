@@ -54,7 +54,7 @@ for i = 1:runduration
     s.run();
 end
 
-%aviobj = close(s.aviobj);
+aviobj = close(s.aviobj);
 % enable to create a movie (3/3)
 
 
